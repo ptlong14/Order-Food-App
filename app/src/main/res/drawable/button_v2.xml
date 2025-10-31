@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Bo góc 10dp -->
+    <corners android:radius="7dp"/>
+
+    <!-- Nền cam -->
+    <solid android:color="#FF5722"/>
+
+    <!-- Viền cam (có thể cùng màu với nền hoặc đậm hơn) -->
+    <stroke
+        android:width="2dp"
+        android:color="#FF5722"/>
+</shape>

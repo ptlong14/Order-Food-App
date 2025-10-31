@@ -1,5 +1,6 @@
 package com.longpt.projectll1.data.remote
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.modelDTO.AddressDto
@@ -17,8 +18,12 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         return try {
             val snapshot =
                 firestore.collection("foods").whereEqualTo("category", category).get().await()
+
             val data = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(FoodDto::class.java)?.copy(id = doc.id)
+            }
+            if (data.isEmpty()) {
+                return TaskResult.Error(Exception("Không có món ăn nào trong danh mục này"))
             }
             TaskResult.Success(data)
         } catch (e: Exception) {
@@ -145,6 +150,9 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             val data = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(FoodDto::class.java)?.copy(id = doc.id)
             }
+            if (data.isEmpty()) {
+                return TaskResult.Error(Exception("Không có món ăn nào trong danh mục bán chạy"))
+            }
             TaskResult.Success(data)
         } catch (e: Exception) {
             TaskResult.Error(e)
@@ -160,6 +168,9 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             val data = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(FoodDto::class.java)?.copy(id = doc.id)
             }
+            if (data.isEmpty()) {
+                return TaskResult.Error(Exception("Không có món ăn nào trong danh mục được đánh giá cao"))
+            }
             TaskResult.Success(data)
         } catch (e: Exception) {
             TaskResult.Error(e)
@@ -174,6 +185,9 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 .limit(8).get().await()
             val data = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(FoodDto::class.java)?.copy(id = doc.id)
+            }
+            if (data.isEmpty()) {
+                return TaskResult.Error(Exception("Không có món ăn nào trong danh mục mới nhất"))
             }
             TaskResult.Success(data)
         } catch (e: Exception) {
@@ -254,6 +268,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
+    //lấy ds địa chỉ của user
     fun getAddresses(userId: String): Flow<TaskResult<List<AddressDto>>> = callbackFlow {
         trySend(TaskResult.Loading)
         val listener = firestore.collection("users").document(userId).collection("address")
@@ -276,24 +291,71 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
+    //thêm địa chỉ cho user
     suspend fun addAddress(address: AddressDto, userId: String): TaskResult<Unit> {
         return try {
-            firestore.collection("users").document(userId).collection("address")
-                .document(address.addressId).set(address).await()
+            val docRef =
+                firestore.collection("users").document(userId).collection("address").document()
+            address.addressId = docRef.id
+            docRef.set(address).await()
+            if(address.defaultAddress){
+                when (val result = changeAddress(address.addressId, userId)) {
+                    is TaskResult.Error -> return result
+                    else -> {}
+                }
+            }
             TaskResult.Success(Unit)
         } catch (e: Exception) {
+            Log.d("ADD_ADDR_ERR", "addAddress: ${e.message}")
             TaskResult.Error(Exception("Có lỗi khi thêm địa chỉ: ${e.message}"))
         }
     }
 
-    suspend fun changeAddress(addressId: String, userId: String): TaskResult<Unit>{
+    //sửa địa chỉ
+    suspend fun updateAddress(updateAddress: AddressDto, userId: String): TaskResult<Unit> {
         return try {
-            val batch= firestore.batch()
-            val addrRef= firestore.collection("users")
-                .document(userId)
-                .collection("address")
+            val addressId = updateAddress.addressId
+            if (addressId.isBlank()) return TaskResult.Error(Exception("addressId trống"))
 
-            val querySnapshot= addrRef.get().await()
+            firestore.collection("users").document(userId).collection("address").document(addressId)
+                .set(updateAddress).await()
+
+            if(updateAddress.defaultAddress){
+                when (val result = changeAddress(addressId, userId)) {
+                    is TaskResult.Error -> return result
+                    else -> {}
+                }
+            }
+            TaskResult.Success(Unit)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    //xóa địa chỉ
+    suspend fun deleteAddress(addressId: String, userId: String): TaskResult<Unit> {
+        return try {
+            val addressDocRef = firestore.collection("users").document(userId).collection("address")
+                .document(addressId)
+            val addrSnapshot = addressDocRef.get().await()
+            val data = addrSnapshot.toObject(AddressDto::class.java)
+            if (data == null) return TaskResult.Error(Exception("Không tìm thấy địa chỉ"))
+            if (data.defaultAddress) {
+                return TaskResult.Error(Exception("Không thể xóa địa chỉ mặc định"))
+            }
+            addressDocRef.delete().await()
+            TaskResult.Success(Unit)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    suspend fun changeAddress(addressId: String, userId: String): TaskResult<Unit> {
+        return try {
+            val batch = firestore.batch()
+            val addrRef = firestore.collection("users").document(userId).collection("address")
+
+            val querySnapshot = addrRef.get().await()
             if (querySnapshot.isEmpty) {
                 return TaskResult.Error(Exception("Không tìm thấy địa chỉ"))
             }
@@ -302,10 +364,27 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 batch.update(documentSnapshot.reference, "defaultAddress", false)
             }
 
-            val newDefaultRef= addrRef.document(addressId)
+            val newDefaultRef = addrRef.document(addressId)
             batch.update(newDefaultRef, "defaultAddress", true)
             batch.commit().await()
             TaskResult.Success(Unit)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    // lấy địa chỉ theo id
+    suspend fun getAddressById(addressId: String, userId: String): TaskResult<AddressDto> {
+        return try {
+            val snapshot = firestore.collection("users").document(userId).collection("address")
+                .document(addressId).get().await()
+            val data = snapshot.toObject(AddressDto::class.java)
+            if (data != null) {
+                TaskResult.Success(data)
+            } else {
+                TaskResult.Error(Exception("Không có dữ liệu địa chỉ."))
+            }
+
         } catch (e: Exception) {
             TaskResult.Error(e)
         }

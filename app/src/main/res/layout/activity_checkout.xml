@@ -57,14 +57,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:text="Địa chỉ"
+                android:layout_marginVertical="8dp"
+                android:textSize="18dp"
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:id="@+id/layoutAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-
-                android:padding="12dp"
+                android:paddingVertical="7dp"
                 android:elevation="2dp"
                 android:gravity="center_vertical">
 
@@ -89,43 +95,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Thay đổi"
+                    android:padding="7dp"
                     android:textColor="#FF5722"
                     android:textStyle="bold" />
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layoutTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-
-                android:padding="12dp"
-                android:elevation="2dp"
-                android:gravity="center_vertical">
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:contentDescription="Thời gian"
-                    android:src="@drawable/ic_clock"
-                    android:layout_marginEnd="8dp"
-                    app:tint="#FF5722" />
-                <TextView
-                    android:id="@+id/tvTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="2:00 AM"
-                    android:textColor="#333333"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tvChangeTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thay đổi"
-                    android:textColor="#FF5722"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
             <TextView
                 android:layout_width="match_parent"
                 android:textStyle="bold"
@@ -234,12 +207,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPlaceOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#FF5722"
             android:minHeight="40dp"
+            android:background="@drawable/button_v2"
             android:paddingVertical="10dp"
             android:paddingHorizontal="20dp"
             android:text="Đặt hàng - 125.000đ"

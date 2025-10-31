@@ -11,7 +11,8 @@ import com.longpt.projectll1.utils.autoUpdateList
 
 
 class UserAddressAdapter(var addressList: List<Address>,
-    val onClickAddress: (Address) -> Unit
+    val onClickAddress: (Address) -> Unit,
+    val onClickBtnEdit:(String)->Unit,
     ) :
     RecyclerView.Adapter<UserAddressAdapter.UserAddressViewHolder>() {
     override fun onCreateViewHolder(
@@ -39,6 +40,9 @@ class UserAddressAdapter(var addressList: List<Address>,
         }
         holder.binding.llInfo.setOnClickListener {
             onClickAddress(address)
+        }
+        holder.binding.btnEditAddr.setOnClickListener {
+            onClickBtnEdit(address.addressId)
         }
     }
 

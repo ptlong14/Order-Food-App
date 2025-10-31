@@ -3,7 +3,7 @@ package com.longpt.projectll1.data.modelDTO
 import com.google.firebase.Timestamp
 
 data class AddressDto(
-    val addressId: String="",
+    var addressId: String="",
     val fullAddress: String="",
     val addressType: String="",
     val phoneNumber: String="",

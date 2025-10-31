@@ -1,5 +1,6 @@
 package com.longpt.projectll1.presentation.ui
 
+import android.content.Intent
 import android.location.Geocoder
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -33,20 +34,24 @@ class ChooseLocationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseLocationBinding
     private lateinit var map: MapView
     private var selectedMarker: Marker? = null
-
+    private  var defaultLat: Double= 21.0285
+    private  var defaultLng: Double = 105.8542
+    private lateinit var mode: String
     private val geocoder by lazy { Geocoder(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityChooseLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mode = intent.getStringExtra("mode") ?: "add"
+        defaultLat = intent.getDoubleExtra("lat", defaultLat)
+        defaultLng = intent.getDoubleExtra("lng", defaultLng)
 
         // Cấu hình OSMdroid
         Configuration.getInstance().load(
             applicationContext, PreferenceManager.getDefaultSharedPreferences(applicationContext)
         )
-
+        //setup map
         map = binding.mapView
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setBuiltInZoomControls(true)
@@ -54,7 +59,7 @@ class ChooseLocationActivity : AppCompatActivity() {
 
         val mapController = map.controller
         mapController.setZoom(18.0)
-        val startPoint = GeoPoint(21.0285, 105.8542) // Hà Nội
+        val startPoint = GeoPoint(defaultLat, defaultLng)
         mapController.setCenter(startPoint)
 
         placeMarker(startPoint)
@@ -157,15 +162,21 @@ class ChooseLocationActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.btnSaveAddress.setOnClickListener {
+        binding.btnSaveLocation.setOnClickListener {
             selectedMarker?.let { marker ->
                 val geo = marker.position
                 val addressText =
                     geocoder.getFromLocation(geo.latitude, geo.longitude, 1)?.firstOrNull()
                         ?.getAddressLine(0) ?: "${geo.latitude}, ${geo.longitude}"
-                "Địa chỉ đã lưu: $addressText, ${geo.latitude}, ${geo.longitude}".showToast(this)
+                "Địa chỉ đã lưu: ${geo.latitude}, ${geo.longitude}".showToast(this)
+                val resultIntent = Intent().apply {
+                    putExtra("lat", geo.latitude)
+                    putExtra("lng", geo.longitude)
+                    putExtra("fullAddress", addressText)
+                }
+                setResult(RESULT_OK, resultIntent)
+                finish()
             }
-            finish()
         }
         binding.iBtnBack.setOnClickListener{
             AlertDialog.Builder(this)

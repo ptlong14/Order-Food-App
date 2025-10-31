@@ -2,17 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp">
 
     <!-- Ảnh -->
-    <ImageView
-        android:id="@+id/imgFood"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:contentDescription="Ảnh món ăn"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img_food" />
+  <androidx.cardview.widget.CardView
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      app:cardCornerRadius="7dp"
+      app:cardPreventCornerOverlap="false"
+      app:cardUseCompatPadding="true"
+      android:clipToOutline="true">
+      <ImageView
+          android:id="@+id/imgFood"
+          android:layout_width="50dp"
+          android:layout_height="50dp"
+          android:contentDescription="Ảnh món ăn"
+          android:scaleType="centerCrop"
+          android:src="@drawable/img_food" />
+  </androidx.cardview.widget.CardView>
 
     <!-- Tên sản phẩm -->
     <TextView

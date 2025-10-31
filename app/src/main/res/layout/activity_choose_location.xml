@@ -4,67 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".presentation.ui.ChooseLocationActivity">
+
     <FrameLayout
-    android:id="@+id/frame_header_order"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-   >
-
-    <TextView
+        android:id="@+id/frame_header_order"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FDCF53"
-        android:gravity="center"
-        android:paddingVertical="30dp"
-        android:text="Chọn vị trí"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iBtnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="start|center_vertical"
-        android:layout_marginHorizontal="10dp"
-        android:background="@drawable/bg_search_view"
-        android:clickable="true"
-        android:contentDescription="Back"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-        android:src="@drawable/arrow_back"
-        app:tint="#FF5722" />
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FDCF53"
+            android:gravity="center"
+            android:paddingVertical="30dp"
+            android:text="Chọn vị trí"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iBtnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/bg_search_view"
+            android:clickable="true"
+            android:contentDescription="Back"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/arrow_back"
+            app:tint="#FF5722" />
+    </FrameLayout>
+
     <AutoCompleteTextView
         android:id="@+id/edtSearch"
-        android:padding="7dp"
-        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tìm vị trí..."
+        android:layout_margin="8dp"
         android:background="#CECDCD"
+        android:hint="Tìm vị trí..."
         android:imeOptions="actionSearch"
+        android:padding="7dp"
         android:singleLine="true" />
 
     <org.osmdroid.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/btnSaveAddress"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSaveLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#FF5722"
+        android:background="@drawable/button_v2"
         android:minHeight="40dp"
-        android:paddingVertical="10dp"
         android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
         android:text="Lưu vị trí"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />

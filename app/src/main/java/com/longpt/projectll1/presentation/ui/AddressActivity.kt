@@ -2,6 +2,7 @@ package com.longpt.projectll1.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.logger.Logger
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
@@ -17,7 +19,10 @@ import com.longpt.projectll1.data.repositoryImpl.AddressRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityAddressBinding
 import com.longpt.projectll1.domain.usecase.AddAddressUC
 import com.longpt.projectll1.domain.usecase.ChangeDefaultAddressUC
+import com.longpt.projectll1.domain.usecase.DeleteAddressByIdUC
+import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressesUC
+import com.longpt.projectll1.domain.usecase.UpdateAddressByIdUC
 import com.longpt.projectll1.presentation.adapter.UserAddressAdapter
 import com.longpt.projectll1.presentation.factory.AddressViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.AddressViewModel
@@ -29,6 +34,7 @@ class AddressActivity : AppCompatActivity() {
     private lateinit var addressViewModel: AddressViewModel
     private val currentUser get() = FirebaseAuth.getInstance().currentUser
     private val userId = currentUser!!.uid
+
 
     lateinit var addressAdapter: UserAddressAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,16 +50,33 @@ class AddressActivity : AppCompatActivity() {
         val repoAddr = AddressRepositoryImpl(FirestoreDataSource())
         val getAddressUC = GetAddressesUC(repoAddr)
         val addAddressUC = AddAddressUC(repoAddr)
+        val updateAddressByIdUC = UpdateAddressByIdUC(repoAddr)
+        val deleteAddressByIdUC = DeleteAddressByIdUC(repoAddr)
         val changeDefaultAddressUC = ChangeDefaultAddressUC(repoAddr)
-        val addressFactory =
-            AddressViewModelFactory(getAddressUC, addAddressUC, changeDefaultAddressUC)
+        val getAddressByIdUC = GetAddressByIdUC(repoAddr)
+        val addressFactory = AddressViewModelFactory(
+            getAddressUC,
+            addAddressUC,
+            updateAddressByIdUC,
+            deleteAddressByIdUC,
+            changeDefaultAddressUC,
+            getAddressByIdUC
+        )
         addressViewModel = ViewModelProvider(this, addressFactory)[AddressViewModel::class.java]
 
         addressViewModel.observeAddresses(userId)
 
         addressAdapter = UserAddressAdapter(emptyList(), onClickAddress = { addr ->
-            addressViewModel.changeDefaultAddress(userId, addr.addressId)
+            val resultIntent = Intent().apply {
+                putExtra("idAddressSelected", addr.addressId)
+            }
+            setResult(RESULT_OK, resultIntent)
             finish()
+        }, onClickBtnEdit = { addrId ->
+            val intent = Intent(this, UpdateAddressActivity::class.java)
+            intent.putExtra("mode", "edit")
+            intent.putExtra("addressId", addrId)
+            startActivity(intent)
         })
         binding.rvSavedAddr.layoutManager = LinearLayoutManager(this)
         binding.rvSavedAddr.adapter = addressAdapter
@@ -95,6 +118,7 @@ class AddressActivity : AppCompatActivity() {
 
         binding.btnAddNewAddr.setOnClickListener {
             val intent = Intent(this, UpdateAddressActivity::class.java)
+            intent.putExtra("mode", "add")
             startActivity(intent)
         }
     }
