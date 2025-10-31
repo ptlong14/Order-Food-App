@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.UpdateAddressActivity">
+
+    <!-- Header -->
+    <FrameLayout
+        android:id="@+id/frame_header_add_addr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvLabelAddOrUpdateAddr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FDCF53"
+            android:gravity="center"
+            android:paddingVertical="30dp"
+            android:text="Thêm địa chỉ mới"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iBtnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/bg_search_view"
+            android:clickable="true"
+            android:contentDescription="Back"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/arrow_back"
+            app:tint="#FF5722" />
+    </FrameLayout>
+
+    <!-- Nội dung scroll -->
+    <ScrollView
+        android:id="@+id/scrollAddAddr"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/layoutSaveAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frame_header_add_addr">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/darker_gray"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:showDividers="middle">
+
+            <!-- Tên -->
+            <EditText
+                android:id="@+id/edtFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/editTextBackground"
+                android:hint="Họ và tên"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:textSize="15sp" />
+
+            <!-- SĐT -->
+            <EditText
+                android:id="@+id/edtPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/editTextBackground"
+                android:hint="Số điện thoại"
+                android:inputType="phone"
+                android:padding="12dp"
+                android:textSize="15sp" />
+
+            <!-- Địa chỉ -->
+            <LinearLayout
+                android:id="@+id/layoutChooseAddr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvSelectedAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Chọn địa chỉ trên bản đồ"
+                    android:textColor="#555"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iBtnChooseMap"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="Chọn trên bản đồ"
+                    android:src="@drawable/ic_location"
+                    android:tint="#FF5722" />
+            </LinearLayout>
+
+            <!-- Loại địa chỉ -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Loại địa chỉ"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rgAddressType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Nhà riêng" />
+
+                <RadioButton
+                    android:id="@+id/rbOffice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="Văn phòng" />
+            </RadioGroup>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Nút lưu -->
+    <LinearLayout
+        android:id="@+id/layoutSaveAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="6dp"
+        android:gravity="center_vertical|end"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btnDeleteAddress"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:text="Lưu địa chỉ"
+            android:visibility="gone"
+            android:textColor="#FF5722"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSaveAddress"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FF5722"
+            android:text="Lưu địa chỉ"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

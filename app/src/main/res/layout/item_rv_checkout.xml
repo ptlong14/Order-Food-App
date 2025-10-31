@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <!-- Ảnh -->
+    <ImageView
+        android:id="@+id/imgFood"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="Ảnh món ăn"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_food" />
+
+    <!-- Tên sản phẩm -->
+    <TextView
+        android:id="@+id/tvProductName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:paddingHorizontal="8dp"
+        android:text="1x Mushroom Risotto "
+        android:textColor="#333333"
+        android:textSize="16sp" />
+
+    <!-- Giá -->
+    <TextView
+        android:id="@+id/tvProductPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center_vertical|end"
+        android:text="115.000đ"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

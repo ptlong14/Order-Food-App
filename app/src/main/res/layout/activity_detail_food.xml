@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FDCF53"
+    tools:context=".presentation.ui.DetailFoodActivity">
+
+    <!-- Nút Back -->
+    <ImageButton
+        android:id="@+id/iBtnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/icon_bg"
+        android:contentDescription="Back"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#FF5722" />
+
+    <!-- Tên món -->
+    <TextView
+        android:id="@+id/tvFoodName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Mushroom Risotto"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/iBtnBack"
+        app:layout_constraintEnd_toStartOf="@id/iBtnFavorite"
+        app:layout_constraintStart_toEndOf="@id/iBtnBack"
+        app:layout_constraintTop_toTopOf="@id/iBtnBack" />
+
+    <!-- Nút Favorite -->
+    <ImageButton
+        android:id="@+id/iBtnFavorite"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/icon_bg"
+        android:contentDescription="Favorite"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/not_fav"
+        app:layout_constraintBottom_toBottomOf="@id/iBtnBack"
+        app:layout_constraintEnd_toStartOf="@+id/iBtnShare"
+        app:layout_constraintTop_toTopOf="@id/iBtnBack" />
+
+    <!-- Nút Share -->
+    <ImageButton
+        android:id="@+id/iBtnShare"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/icon_bg"
+        android:contentDescription="Favorite"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_share"
+        app:layout_constraintBottom_toBottomOf="@id/iBtnBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iBtnBack" />
+
+    <!-- Nội dung chính -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iBtnBack">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_card_view_top_round"
+            android:paddingStart="20dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="16dp">
+
+            <!-- Hình ảnh món ăn -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imgFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_food" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Rating -->
+            <LinearLayout
+                android:id="@+id/ratingsLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/cardView"
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+                <TextView
+                    android:id="@+id/tvStarRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="⭐⭐⭐⭐⭐"
+                    android:textColor="#FFD700"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvCntSold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Đã bán: 20"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_height="14dp"
+                    android:background="#999999" />
+                <TextView
+                    android:id="@+id/tvCntLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 lượt thích"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+            <!-- Mô tả -->
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="2dp"
+                android:text="Món cơm risotto nấm Ý mềm dẻo, đậm đà hương vị rượu vang trắng."
+                android:textColor="#333333"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="@+id/cardView"
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toBottomOf="@id/ratingsLayout" />
+
+            <LinearLayout
+                android:id="@+id/priceLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toEndOf="@id/cardView"
+                app:layout_constraintStart_toStartOf="@id/cardView"
+                app:layout_constraintTop_toBottomOf="@id/tvDescription">
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="120.000đ"
+                    android:textStyle="bold"
+                    android:textColor="#FF5722"
+                    android:textSize="18sp"
+                    android:gravity="start" />
+
+                <ImageButton
+                    android:id="@+id/iBtnAddToCart"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/add"
+                    android:backgroundTint="#FF5722"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:textColor="#FF9800"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="#EBB8C8"
+                app:layout_constraintEnd_toEndOf="@id/cardView"
+                app:layout_constraintStart_toStartOf="@id/cardView"
+                app:layout_constraintTop_toBottomOf="@id/priceLayout" />
+
+
+            <TextView
+                android:id="@+id/tvComments"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/cardView"
+                app:layout_constraintStart_toStartOf="@id/cardView"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                android:text="Bình luận"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvComments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintEnd_toEndOf="@id/cardView"
+                app:layout_constraintStart_toStartOf="@id/cardView"
+                app:layout_constraintTop_toBottomOf="@id/tvComments"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

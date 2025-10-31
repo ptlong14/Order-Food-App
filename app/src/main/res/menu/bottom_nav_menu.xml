@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/botHome"
+    android:title="Home"
+    android:icon="@drawable/home"
+    />
+    <item
+        android:id="@+id/botFoodMenu"
+        android:title="Thực đơn"
+        android:icon="@drawable/menu"
+        />
+    <item
+        android:id="@+id/botFavorite"
+        android:title="Thích"
+        android:icon="@drawable/heart"
+        />
+    <item
+        android:id="@+id/botMyOrder"
+        android:title="Đơn hàng"
+        android:icon="@drawable/order"
+        />
+    <item
+        android:id="@+id/userSetting"
+        android:title="Tôi"
+        android:icon="@drawable/ic_account"
+        />
+</menu>

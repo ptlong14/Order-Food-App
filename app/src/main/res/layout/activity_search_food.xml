@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".presentation.ui.SearchFoodActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:background="@drawable/border_search_view"
+            android:backgroundTint="@null"
+            android:drawableEnd="@android:drawable/ic_menu_search"
+            android:drawableTint="@color/black"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="Nhập hoặc nói để tìm món..."
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="8dp" />
+
+        <ImageButton
+            android:id="@+id/btnVoice"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:background="@android:color/transparent"
+            android:contentDescription="Voice search"
+            android:src="@android:drawable/ic_btn_speak_now" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:text="Lịch sử tìm kiếm"/>
+</LinearLayout>

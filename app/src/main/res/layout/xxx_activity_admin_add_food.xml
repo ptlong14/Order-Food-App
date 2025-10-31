@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    tools:context=".AdminAddFood"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/layoutContainer"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Tên món -->
+        <EditText
+            android:id="@+id/etName"
+            android:hint="Tên món ăn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Mô tả -->
+        <EditText
+            android:id="@+id/etDescription"
+            android:hint="Mô tả"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Giá -->
+        <EditText
+            android:id="@+id/etPrice"
+            android:hint="Giá (VNĐ)"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Ảnh -->
+        <EditText
+            android:id="@+id/etImageUrl"
+            android:hint="Link ảnh (Firebase Storage URL)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Danh mục -->
+        <Spinner
+            android:id="@+id/spCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Rating -->
+        <EditText
+            android:id="@+id/etRating"
+            android:hint="Điểm đánh giá (0-5)"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Sold -->
+        <EditText
+            android:id="@+id/etSold"
+            android:hint="Đã bán"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Option Groups -->
+        <TextView
+            android:text="Nhóm tuỳ chọn"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/layoutOptionGroups"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnAddGroup"
+            android:text="Thêm nhóm tuỳ chọn"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:text="Lưu món ăn"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>
