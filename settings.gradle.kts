@@ -10,6 +10,7 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://jitpack.io")
+
     }
 }
 dependencyResolutionManagement {
@@ -18,8 +19,10 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
+        flatDir {
+            dirs("app/libs") // Thư mục chứa .aar
+        }
     }
 }
-
 rootProject.name = "ProjectLL1"
 include(":app")

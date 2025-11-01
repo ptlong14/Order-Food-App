@@ -26,6 +26,10 @@ class CheckOutAdapter(private val cartItems: List<CartItem>) :
         val cartItem = cartItems[position]
         holder.binding.tvProductName.text="${cartItem.foodName} - x${cartItem.cartItemQuantity}"
         holder.binding.tvProductPrice.text = FormatUtil.moneyFormat(cartItem.unitPrice * cartItem.cartItemQuantity)
+        val optionList = cartItem.selectedOptions
+        val optionString = optionList
+            .joinToString(", ") { it.substringAfter(": ").trim() }
+        holder.binding.tvOptions.text = optionString
         Glide.with(holder.binding.imgFood.context).load(cartItem.foodImgUrl)
             .into(holder.binding.imgFood)
     }

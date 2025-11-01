@@ -190,6 +190,18 @@
                     android:text="125.000đ"
                     android:textColor="#333333"/>
             </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:layout_marginVertical="10dp"
+                android:text="Ghi chú"
+                android:textSize="18dp"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/edtOrderNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ghi chú cho quán"/>
         </LinearLayout>
     </ScrollView>
 
@@ -199,13 +211,45 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:elevation="6dp"
-        android:gravity="center_vertical|end"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
+        android:orientation="vertical"
+        android:padding="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginVertical="7dp"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/rbVNPay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ví VNPay"
+                android:layout_marginHorizontal="5dp"
+                android:gravity="center"
+                android:checked="false"
+                android:textColor="@color/radio_text_color"
+                android:background="@drawable/radio_selector"
+                android:button="@android:color/transparent"
+                />
+            <RadioButton
+                android:id="@+id/rbCOD"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tiền mặt"
+                android:layout_marginHorizontal="5dp"
+                android:gravity="center"
+                android:checked="true"
+                android:textColor="@color/radio_text_color"
+                android:background="@drawable/radio_selector"
+                android:button="@android:color/transparent"
+                />
+        </RadioGroup>
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPlaceOrder"
@@ -214,7 +258,6 @@
             android:minHeight="40dp"
             android:background="@drawable/button_v2"
             android:paddingVertical="10dp"
-            android:paddingHorizontal="20dp"
             android:text="Đặt hàng - 125.000đ"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />

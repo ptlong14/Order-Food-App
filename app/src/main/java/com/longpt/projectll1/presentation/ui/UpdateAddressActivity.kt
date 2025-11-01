@@ -69,11 +69,10 @@ class UpdateAddressActivity : AppCompatActivity() {
         val addAddressUC = AddAddressUC(repoAddr)
         val updateAddressByIdUC = UpdateAddressByIdUC(repoAddr)
         val deleteAddressByIdUC = DeleteAddressByIdUC(repoAddr)
-        val changeDefaultAddressUC = ChangeDefaultAddressUC(repoAddr)
         val getAddressByIdUC = GetAddressByIdUC(repoAddr)
 
         val addressFactory = AddressViewModelFactory(
-            getAddressUC, addAddressUC, updateAddressByIdUC, deleteAddressByIdUC,changeDefaultAddressUC, getAddressByIdUC
+            getAddressUC, addAddressUC, updateAddressByIdUC, deleteAddressByIdUC, getAddressByIdUC
         )
         addressViewModel = ViewModelProvider(this, addressFactory)[AddressViewModel::class.java]
 

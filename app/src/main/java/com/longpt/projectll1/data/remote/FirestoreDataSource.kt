@@ -7,6 +7,7 @@ import com.longpt.projectll1.data.modelDTO.AddressDto
 import com.longpt.projectll1.data.modelDTO.BannerDto
 import com.longpt.projectll1.data.modelDTO.CartItemDto
 import com.longpt.projectll1.data.modelDTO.FoodDto
+import com.longpt.projectll1.data.modelDTO.OrderDto
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -267,6 +268,27 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             TaskResult.Error(e)
         }
     }
+    //xóa cart của user
+    suspend fun clearCart(userId: String): TaskResult<Unit>{
+        return try {
+           val cartSubRef= firestore.collection("users")
+               .document(userId)
+               .collection("cart")
+            val snapshot= cartSubRef.get().await()
+            if(snapshot.isEmpty){
+                return TaskResult.Error(Exception("Giỏ hàng trống"))
+            }
+            val batch= firestore.batch()
+            snapshot.documents.forEach {
+                batch.delete(it.reference)
+            }
+            batch.commit().await()
+            TaskResult.Success(Unit)
+
+        }catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
 
     //lấy ds địa chỉ của user
     fun getAddresses(userId: String): Flow<TaskResult<List<AddressDto>>> = callbackFlow {
@@ -294,6 +316,15 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
     //thêm địa chỉ cho user
     suspend fun addAddress(address: AddressDto, userId: String): TaskResult<Unit> {
         return try {
+            val addressSnapshot = firestore.collection("users")
+                .document(userId)
+                .collection("address")
+                .get()
+                .await()
+
+            if (addressSnapshot.isEmpty && !address.defaultAddress) {
+                return TaskResult.Error(Exception("Địa chỉ đầu tiên phải được chọn làm mặc định"))
+            }
             val docRef =
                 firestore.collection("users").document(userId).collection("address").document()
             address.addressId = docRef.id
@@ -379,14 +410,34 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             val snapshot = firestore.collection("users").document(userId).collection("address")
                 .document(addressId).get().await()
             val data = snapshot.toObject(AddressDto::class.java)
+
             if (data != null) {
                 TaskResult.Success(data)
-            } else {
-                TaskResult.Error(Exception("Không có dữ liệu địa chỉ."))
+            }else{
+                TaskResult.Error(Exception("Địa chỉ đã bị xóa hoặc không khả dụng. Đã chuyển sang địa chỉ mặc định."))
             }
-
         } catch (e: Exception) {
             TaskResult.Error(e)
         }
     }
+
+    // tạo đơn hàng
+    suspend fun createOrder(order: OrderDto): TaskResult<Unit> {
+        return try {
+            val docRef = firestore.collection("orders").add(order).await()
+            val generatedId = docRef.id
+            firestore.collection("orders").document(generatedId)
+                .update("orderId", generatedId).await()
+
+                when (val result = clearCart(order.userId)) {
+                    is TaskResult.Error -> return result
+                    else -> {}
+                }
+
+            TaskResult.Success(Unit)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
 }

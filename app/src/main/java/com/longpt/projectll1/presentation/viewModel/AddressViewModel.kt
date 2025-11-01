@@ -11,10 +11,7 @@ import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressesUC
 import com.longpt.projectll1.domain.usecase.UpdateAddressByIdUC
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AddressViewModel(
@@ -22,7 +19,6 @@ class AddressViewModel(
     val updateAddressByIdUC: UpdateAddressByIdUC,
     val deleteAddressByIdUC: DeleteAddressByIdUC,
     val getAddressesUC: GetAddressesUC,
-    val changeDefaultAddressUC: ChangeDefaultAddressUC,
     val getAddressByIdUC: GetAddressByIdUC
 ) : ViewModel() {
     private val _addresses = MutableStateFlow<TaskResult<List<Address>>>(TaskResult.Loading)
@@ -41,20 +37,6 @@ class AddressViewModel(
 
     private val _addressById = MutableStateFlow<TaskResult<Address>>(TaskResult.Loading)
     val addressById: StateFlow<TaskResult<Address>> = _addressById
-
-
-    val defaultAddress: StateFlow<String> = _addresses.map { result ->
-        when (result) {
-            is TaskResult.Loading -> "Đang tải..."
-            is TaskResult.Error -> "Lỗi tải địa chỉ"
-            is TaskResult.Success -> {
-                val addr =
-                    result.data.firstOrNull { it.defaultAddress } ?: result.data.firstOrNull()
-                if (addr != null) "${addr.receiverName} | ${addr.phoneNumber}\n${addr.fullAddress}"
-                else "Chưa có địa chỉ"
-            }
-        }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, "Chưa có địa chỉ")
 
     fun observeAddresses(userId: String) {
         viewModelScope.launch {
@@ -87,15 +69,6 @@ class AddressViewModel(
             _deleteAddrState.value = result
         }
     }
-
-    fun changeDefaultAddress(userId: String, addressId: String) {
-        viewModelScope.launch {
-            _changeAddrState.value = TaskResult.Loading
-            val result = changeDefaultAddressUC(addressId, userId)
-            _changeAddrState.value = result
-        }
-    }
-
     fun getAddressById(userId: String, addressId: String) {
         viewModelScope.launch {
             _addressById.value = TaskResult.Loading

@@ -34,7 +34,7 @@ class AddressActivity : AppCompatActivity() {
     private lateinit var addressViewModel: AddressViewModel
     private val currentUser get() = FirebaseAuth.getInstance().currentUser
     private val userId = currentUser!!.uid
-
+    private var oldSelectedId: String? = null
 
     lateinit var addressAdapter: UserAddressAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,20 +52,18 @@ class AddressActivity : AppCompatActivity() {
         val addAddressUC = AddAddressUC(repoAddr)
         val updateAddressByIdUC = UpdateAddressByIdUC(repoAddr)
         val deleteAddressByIdUC = DeleteAddressByIdUC(repoAddr)
-        val changeDefaultAddressUC = ChangeDefaultAddressUC(repoAddr)
         val getAddressByIdUC = GetAddressByIdUC(repoAddr)
         val addressFactory = AddressViewModelFactory(
             getAddressUC,
             addAddressUC,
             updateAddressByIdUC,
             deleteAddressByIdUC,
-            changeDefaultAddressUC,
             getAddressByIdUC
         )
         addressViewModel = ViewModelProvider(this, addressFactory)[AddressViewModel::class.java]
-
         addressViewModel.observeAddresses(userId)
 
+        oldSelectedId = intent.getStringExtra("oldSelectedId")
         addressAdapter = UserAddressAdapter(emptyList(), onClickAddress = { addr ->
             val resultIntent = Intent().apply {
                 putExtra("idAddressSelected", addr.addressId)
@@ -97,22 +95,11 @@ class AddressActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            addressViewModel.changeAddrState.collect { state ->
-                when (state) {
-                    is TaskResult.Loading -> {}
-                    is TaskResult.Success -> {
-                        "Đã đặt làm mặc định!".showToast(this@AddressActivity)
-                    }
-
-                    is TaskResult.Error -> {
-                        "Lỗi: ${state.exception.message}".showToast(this@AddressActivity)
-                    }
-                }
-            }
-        }
-
         binding.iBtnBack.setOnClickListener {
+            val resultIntent = Intent().apply {
+                putExtra("idAddressSelected", oldSelectedId)
+            }
+            setResult(RESULT_OK, resultIntent)
             finish()
         }
 

@@ -15,12 +15,11 @@ class AddressViewModelFactory(
     private val addAddressUC: AddAddressUC,
     private val updateAddressByIdUC: UpdateAddressByIdUC,
     private val deleteAddressByIdUC: DeleteAddressByIdUC,
-    private val changeDefaultAddressUC: ChangeDefaultAddressUC,
     private val getAddressByIdUC: GetAddressByIdUC
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddressViewModel::class.java)) {
-            return AddressViewModel(addAddressUC,updateAddressByIdUC,deleteAddressByIdUC,getAddressUC, changeDefaultAddressUC, getAddressByIdUC) as T
+            return AddressViewModel(addAddressUC,updateAddressByIdUC,deleteAddressByIdUC,getAddressUC, getAddressByIdUC) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

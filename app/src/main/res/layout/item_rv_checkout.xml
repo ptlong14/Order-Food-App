@@ -1,41 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp">
 
     <!-- Ảnh -->
-  <androidx.cardview.widget.CardView
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      app:cardCornerRadius="7dp"
-      app:cardPreventCornerOverlap="false"
-      app:cardUseCompatPadding="true"
-      android:clipToOutline="true">
-      <ImageView
-          android:id="@+id/imgFood"
-          android:layout_width="50dp"
-          android:layout_height="50dp"
-          android:contentDescription="Ảnh món ăn"
-          android:scaleType="centerCrop"
-          android:src="@drawable/img_food" />
-  </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:clipToOutline="true"
+        app:cardCornerRadius="7dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
 
-    <!-- Tên sản phẩm -->
-    <TextView
-        android:id="@+id/tvProductName"
+        <ImageView
+            android:id="@+id/imgFood"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="Ảnh món ăn"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_food" />
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="2"
-        android:paddingHorizontal="8dp"
-        android:text="1x Mushroom Risotto "
-        android:textColor="#333333"
-        android:textSize="16sp" />
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_weight="5">
+
+        <TextView
+            android:id="@+id/tvProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:paddingHorizontal="8dp"
+            android:text="1x Mushroom Risotto "
+            android:textColor="#333333"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tvOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingHorizontal="8dp"
+            android:maxLines="1"
+            android:text="Nấm linh chi, Cỡ vừa, Kim chi"
+            android:textColor="#777777"
+            android:textSize="13sp"/>
+    </LinearLayout>
 
     <!-- Giá -->
     <TextView

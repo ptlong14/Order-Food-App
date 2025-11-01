@@ -6,7 +6,6 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
-
 android {
     namespace = "com.longpt.projectll1"
     compileSdk = 36
@@ -68,7 +67,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:5.0.0-rc01")
     ksp("com.github.bumptech.glide:ksp:5.0.0-rc01")
 
-    implementation("androidx.fragment:fragment-ktx:1.8.2")
+    implementation("androidx.fragment:fragment-ktx:1.8.9")
+    implementation("androidx.fragment:fragment:1.8.9")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
@@ -76,4 +76,9 @@ dependencies {
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
+
+    //vnpay
+    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.squareup.picasso:picasso:2.8")
+    implementation(files("libs/merchant-1.0.25.aar"))
 }

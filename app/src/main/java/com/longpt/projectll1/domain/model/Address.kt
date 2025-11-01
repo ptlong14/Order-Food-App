@@ -13,6 +13,6 @@ data class Address(
     val receiverName: String="",
     val latitude: Double=0.0,
     val longitude: Double=0.0,
-    var defaultAddress: Boolean=true,
+    var defaultAddress: Boolean=false,
     val createdAt: Timestamp= Timestamp.now()
 ):Parcelable
