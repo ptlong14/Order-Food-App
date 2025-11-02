@@ -3,14 +3,13 @@ package com.longpt.projectll1.presentation.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.SharedPef.PendingOrderStorage
@@ -21,15 +20,13 @@ import com.longpt.projectll1.domain.model.Order
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.presentation.factory.OrderViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.OrderViewModel
+import com.longpt.projectll1.utils.VNPayUtils
 import com.longpt.projectll1.utils.showToast
 import kotlinx.coroutines.launch
 
 class CheckOutVNPayResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
-    private val gson = Gson()
     private val hashSecret = "J7W1CKVRZCQ03OE22Z1PW4O7WRN0YDKV"
-    private val currentUser get() = FirebaseAuth.getInstance().currentUser
-    private val userId = currentUser!!.uid
     private lateinit var orderViewModel: OrderViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +49,14 @@ class CheckOutVNPayResultActivity : AppCompatActivity() {
             finish()
             return
         }
+        Log.d("CheckOutVNPayResultActivity", "URI: $uri")
         val responseCode = uri.getQueryParameter("vnp_ResponseCode")
-
+        val isValid = verifyVNPaySignature(uri)
+        if (!isValid) {
+           "Sai chữ ký VNPay!".showToast(this)
+            finish()
+            return
+        }
         if (responseCode == "00") {
             val pendingOrder = PendingOrderStorage.getOrder(this)
             if (pendingOrder == null) {
@@ -71,7 +74,20 @@ class CheckOutVNPayResultActivity : AppCompatActivity() {
         }
     }
 
-
+    private fun verifyVNPaySignature(uri: Uri): Boolean {
+        val vnPayReturnParams = mutableMapOf<String, String>()
+        for (key in uri.queryParameterNames) {
+            if (key.startsWith("vnp_") && key != "vnp_SecureHash" && key != "vnp_SecureHashType") {
+                uri.getQueryParameter(key)?.let {
+                    vnPayReturnParams[key] = it
+                }
+            }
+        }
+        val (hashData, _) = VNPayUtils.buildHashData(vnPayReturnParams)
+        val secureGetFromUri= uri.getQueryParameter("vnp_SecureHash") ?: return false
+        val secureHash = VNPayUtils.hmacSHA512(hashSecret, hashData.toString())
+        return secureGetFromUri == secureHash
+    }
     private fun saveOrder(order: Order) {
         lifecycleScope.launch {
             orderViewModel.createOrder(order)

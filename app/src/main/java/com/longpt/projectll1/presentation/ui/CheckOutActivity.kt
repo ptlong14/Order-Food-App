@@ -3,7 +3,6 @@ package com.longpt.projectll1.presentation.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -38,18 +37,15 @@ import com.longpt.projectll1.presentation.factory.OrderViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.AddressViewModel
 import com.longpt.projectll1.presentation.viewModel.OrderViewModel
 import com.longpt.projectll1.utils.FormatUtil
+import com.longpt.projectll1.utils.VNPayUtils
 import com.longpt.projectll1.utils.showToast
 import com.vnpay.authentication.VNP_AuthenticationActivity
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 import java.util.UUID
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 class CheckOutActivity : AppCompatActivity() {
     private lateinit var addressViewModel: AddressViewModel
@@ -200,7 +196,7 @@ class CheckOutActivity : AppCompatActivity() {
                     paymentMethod,
                     shippingFee,
                     orderNote,
-                    orderStatus= if (paymentMethod == "COD") "Pending" else "Paid",
+                    orderStatus= if (paymentMethod == "COD") "Pending" else "Paid, Pending",
                     createdAt,
                     updatedAt
                 )
@@ -248,11 +244,33 @@ class CheckOutActivity : AppCompatActivity() {
         intent.putExtra("is_sandbox", true)
 
         intent.putExtra("order_data", Gson().toJson(newOrder))
+        VNP_AuthenticationActivity.setSdkCompletedCallback { action ->
+            when (action) {
+                "AppBackAction" -> {
+                 "Người dùng nhấn quay lại từ SDK".showToast(this)
+                }
+                "CallMobileBankingApp" -> {
+                 "Người dùng chuyển sang app thanh toán (Mobile Banking / Ví)".showToast(this)
+                }
+                "WebBackAction" -> {
+                   "Người dùng quay lại từ trang web thanh toán".showToast(this)
+                }
+                "FaildBackAction" -> {
+                   "Thanh toán thất bại!".showToast(this)
+                }
+                "SuccessBackAction" -> {
+                }
+                else -> {
+                    "Không xác định: $action".showToast(this)
+                }
+            }
+        }
         startActivity(intent)
     }
 
 
     private fun createVnpayUrl(total: Long, orderId: String, orderInfor: String): String {
+        val hashSecret = "J7W1CKVRZCQ03OE22Z1PW4O7WRN0YDKV"
         val vnpVersion = "2.1.0"
         val vnpCommand = "pay"
         val vnpTxnRef = orderId
@@ -261,8 +279,7 @@ class CheckOutActivity : AppCompatActivity() {
         val orderType = "order-type"
         val locate = "vn"
         val vnpCurrCode = "VND"
-
-        var urlReturn = "yummyfood://result"
+        val urlReturn = "yummyfood://result"
 
         val vnpParams = mutableMapOf<String, String>()
         vnpParams["vnp_Version"] = vnpVersion
@@ -287,42 +304,12 @@ class CheckOutActivity : AppCompatActivity() {
         val vnpExpireDate = formatter.format(cld.time)
         vnpParams["vnp_ExpireDate"] = vnpExpireDate
 
-        // --- Build query & hashData ---
-        val fieldNames = vnpParams.keys.sorted()
-        val hashData = StringBuilder()
-        val query = StringBuilder()
+        val (hashData, query)= VNPayUtils.buildHashData(vnpParams)
 
-        fieldNames.forEachIndexed { index, fieldName ->
-            val fieldValue = vnpParams[fieldName]
-            if (!fieldValue.isNullOrEmpty()) {
-                val encodedValue =
-                    URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString())
-                val encodedName = URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString())
-
-                hashData.append("$encodedName=$encodedValue")
-                query.append("$encodedName=$encodedValue")
-
-                if (index < fieldNames.size - 1) {
-                    hashData.append('&')
-                    query.append('&')
-                }
-            }
-        }
-
-        val seckey = "J7W1CKVRZCQ03OE22Z1PW4O7WRN0YDKV"
-        val vnpSecureHash = hmacSHA512(seckey, hashData.toString())
+        val vnpSecureHash = VNPayUtils.hmacSHA512(hashSecret, hashData.toString())
         query.append("&vnp_SecureHash=$vnpSecureHash")
 
-        Log.d("VNPayDebug", "StartHash: $vnpSecureHash")
         val paymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?$query"
         return paymentUrl
-    }
-
-    private fun hmacSHA512(key: String, data: String): String {
-        val hmac = Mac.getInstance("HmacSHA512")
-        val secretKey = SecretKeySpec(key.toByteArray(Charsets.UTF_8), "HmacSHA512")
-        hmac.init(secretKey)
-        val hashBytes = hmac.doFinal(data.toByteArray(Charsets.UTF_8))
-        return hashBytes.joinToString("") { "%02x".format(it) }
     }
 }
