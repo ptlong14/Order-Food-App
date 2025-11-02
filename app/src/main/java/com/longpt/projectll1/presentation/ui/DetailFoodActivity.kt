@@ -1,7 +1,6 @@
 package com.longpt.projectll1.presentation.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -11,7 +10,6 @@ import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.longpt.projectll1.AdminAddFood
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
@@ -28,7 +25,6 @@ import com.longpt.projectll1.data.repositoryImpl.FoodRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityDetailFoodBinding
 import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
-import com.longpt.projectll1.domain.usecase.CheckFoodIsFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
 import com.longpt.projectll1.domain.usecase.GetFoodByIdUC
 import com.longpt.projectll1.domain.usecase.RemoveFromFavoriteUC

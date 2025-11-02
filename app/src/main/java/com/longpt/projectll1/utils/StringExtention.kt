@@ -9,20 +9,14 @@ import android.widget.Toast
 import com.longpt.projectll1.databinding.DialogAlertV1Binding
 
 
-fun String.showToast(context: Context, durationMillis: Long = 2000L) {
+fun String.showToast(context: Context, durationMillis: Long = 2700L) {
     val toast = Toast(context).apply {
         // Inflate layout custom
         val binding = DialogAlertV1Binding.inflate(LayoutInflater.from(context))
         binding.tvMessage.text = this@showToast
-
-        // Set view
         view = binding.root
-
-        // Căn giữa màn hình
         setGravity(Gravity.CENTER, 0, 0)
-
-        // Thời gian hiển thị (ms)
-        this.duration = Toast.LENGTH_SHORT  // Dùng mặc định, sẽ tự dismiss bằng Handler
+        this.duration = Toast.LENGTH_SHORT
     }
 
     toast.show()

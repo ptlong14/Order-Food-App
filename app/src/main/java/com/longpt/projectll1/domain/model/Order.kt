@@ -13,7 +13,7 @@ data class Order(
     val paymentMethod: String = "",
     val shippingFee: Double = 0.0,
     val orderNote: String = "",
-    val orderStatus: String = "Pending",
+    var orderStatus: String = "Pending",
     val createdAt: Timestamp = Timestamp.now(),
     val updatedAt: Timestamp = Timestamp.now()
 ) : Parcelable

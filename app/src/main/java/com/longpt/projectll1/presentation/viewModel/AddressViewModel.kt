@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.Address
 import com.longpt.projectll1.domain.usecase.AddAddressUC
-import com.longpt.projectll1.domain.usecase.ChangeDefaultAddressUC
 import com.longpt.projectll1.domain.usecase.DeleteAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressesUC

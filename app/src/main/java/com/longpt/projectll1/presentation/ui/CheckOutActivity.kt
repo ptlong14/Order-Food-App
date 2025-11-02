@@ -2,7 +2,6 @@ package com.longpt.projectll1.presentation.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -15,8 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
+import com.longpt.projectll1.data.SharedPef.PendingOrderStorage
 import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.AddressRepositoryImpl
 import com.longpt.projectll1.data.repositoryImpl.OrderRepositoryImpl
@@ -26,7 +27,6 @@ import com.longpt.projectll1.domain.model.CartItem
 import com.longpt.projectll1.domain.model.Order
 import com.longpt.projectll1.domain.model.OrderItem
 import com.longpt.projectll1.domain.usecase.AddAddressUC
-import com.longpt.projectll1.domain.usecase.ChangeDefaultAddressUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.DeleteAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
@@ -39,9 +39,17 @@ import com.longpt.projectll1.presentation.viewModel.AddressViewModel
 import com.longpt.projectll1.presentation.viewModel.OrderViewModel
 import com.longpt.projectll1.utils.FormatUtil
 import com.longpt.projectll1.utils.showToast
-import kotlinx.coroutines.isActive
+import com.vnpay.authentication.VNP_AuthenticationActivity
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 import java.util.UUID
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 class CheckOutActivity : AppCompatActivity() {
     private lateinit var addressViewModel: AddressViewModel
@@ -84,10 +92,6 @@ class CheckOutActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n", "DefaultLocale")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        selectedAddrId = savedInstanceState?.getString("selectedAddrId")
-        Log.d("CheckoutFlow", "onCreate - restored selectedAddrId: $selectedAddrId")
-
         enableEdgeToEdge()
         binding = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -104,11 +108,7 @@ class CheckOutActivity : AppCompatActivity() {
         val deleteAddressByIdUC = DeleteAddressByIdUC(repoAddr)
         val getAddressByIdUC = GetAddressByIdUC(repoAddr)
         val addressFactory = AddressViewModelFactory(
-            getAddressUC,
-            addAddressUC,
-            updateAddressByIdUC,
-            deleteAddressByIdUC,
-            getAddressByIdUC
+            getAddressUC, addAddressUC, updateAddressByIdUC, deleteAddressByIdUC, getAddressByIdUC
         )
         addressViewModel = ViewModelProvider(this, addressFactory)[AddressViewModel::class.java]
 
@@ -140,17 +140,21 @@ class CheckOutActivity : AppCompatActivity() {
         val cartItems =
             intent.getParcelableArrayListExtra<CartItem>("orderFoodData") ?: arrayListOf()
 
-        val totalPriceItem = cartItems.sumOf { item ->
-            item.unitPrice * item.cartItemQuantity
-        }
-        val lastTotalPrice = totalPriceItem + 10000
-        binding.tvTotalPriceItem.text = FormatUtil.moneyFormat(totalPriceItem)
-        binding.tvLastTotalPrice.text = FormatUtil.moneyFormat(lastTotalPrice)
-        binding.btnPlaceOrder.text = "Đặt hàng - ${FormatUtil.moneyFormat(lastTotalPrice)}"
-
         val adapter = CheckOutAdapter(cartItems)
         binding.rvCheckOutItems.layoutManager = LinearLayoutManager(this)
         binding.rvCheckOutItems.adapter = adapter
+
+        val totalPriceItem = cartItems.sumOf { item ->
+            item.unitPrice * item.cartItemQuantity
+        }
+        val totalPricePlusShipFee = totalPriceItem + 10000
+        binding.tvTotalPriceItem.text = FormatUtil.moneyFormat(totalPriceItem)
+        binding.tvLastTotalPrice.text = FormatUtil.moneyFormat(totalPricePlusShipFee)
+        binding.btnPlaceOrder.text = "Đặt hàng - ${FormatUtil.moneyFormat(totalPricePlusShipFee)}"
+
+        binding.iBtnBack.setOnClickListener {
+            finish()
+        }
 
         binding.tvChangeAddress.setOnClickListener {
             val intent = Intent(this, AddressActivity::class.java)
@@ -158,15 +162,12 @@ class CheckOutActivity : AppCompatActivity() {
             changeAddrLauncher.launch(intent)
         }
 
-        binding.iBtnBack.setOnClickListener {
-            finish()
-        }
         binding.btnPlaceOrder.setOnClickListener {
-           if(selectedAddrId == null){
-               "Chưa chọn địa chỉ".showToast(this)
-               return@setOnClickListener
-           }else{
-                val orderItems= cartItems.map {
+            if (selectedAddrId == null) {
+                "Chưa chọn địa chỉ".showToast(this)
+                return@setOnClickListener
+            } else {
+                val orderItems = cartItems.map {
                     OrderItem(
                         orderItemId = UUID.randomUUID().toString(),
                         orderFoodName = it.foodName,
@@ -176,38 +177,152 @@ class CheckOutActivity : AppCompatActivity() {
                         selectedOptions = it.selectedOptions
                     )
                 }
-               val totalPriceItem= totalPriceItem
-               val shippingFee= 10000.0
-               var paymentMethod= ""
-               val orderNote= binding.edtOrderNote.text.toString()
-               val orderStatus= "Pending"
-               val createdAt= Timestamp.now()
-               val updatedAt= Timestamp.now()
+                val totalPriceItem = totalPriceItem
+                val shippingFee = 10000.0
+                var paymentMethod = ""
+                val orderNote = binding.edtOrderNote.text.toString()
+                val createdAt = Timestamp.now()
+                val updatedAt = Timestamp.now()
 
 
-               if(binding.rbCOD.isChecked){
-                   paymentMethod="COD"
-               }else if(binding.rbVNPay.isChecked){
-                   paymentMethod="VNPay"
-               }
+                if (binding.rbCOD.isChecked) {
+                    paymentMethod = "COD"
+                } else if (binding.rbVNPay.isChecked) {
+                    paymentMethod = "VNPay"
+                }
 
-               val newOrder= Order("", userId,orderItems,currentAddr,totalPriceItem,paymentMethod,shippingFee,orderNote,orderStatus,createdAt,updatedAt)
-               orderViewModel.createOrder(newOrder)
-               lifecycleScope.launch {
-                   orderViewModel.createOrderState.collect{res->
-                       when(res){
-                           is TaskResult.Loading -> {}
-                           is TaskResult.Error -> {
-                               res.exception.message?.showToast(this@CheckOutActivity)
-                           }
-                           is TaskResult.Success -> {
-                               "Đặt hàng thành công".showToast(this@CheckOutActivity)
-                               finish()
-                           }
-                       }
-                   }
-               }
-           }
+                val newOrder = Order(
+                    UUID.randomUUID().toString(),
+                    userId,
+                    orderItems,
+                    currentAddr,
+                    totalPriceItem,
+                    paymentMethod,
+                    shippingFee,
+                    orderNote,
+                    orderStatus= if (paymentMethod == "COD") "Pending" else "Paid",
+                    createdAt,
+                    updatedAt
+                )
+
+                if (paymentMethod == "COD") {
+                    createOrder(newOrder)
+                } else if (paymentMethod == "VNPay") {
+                    PendingOrderStorage.saveOrder(this, newOrder)
+                    openSDK(newOrder)
+                }
+            }
         }
+    }
+
+    private fun createOrder(newOrder: Order) {
+        orderViewModel.createOrder(newOrder)
+        lifecycleScope.launch {
+            orderViewModel.createOrderState.collect { res ->
+                when (res) {
+                    is TaskResult.Loading -> {}
+                    is TaskResult.Error -> {
+                        res.exception.message?.showToast(this@CheckOutActivity)
+                    }
+
+                    is TaskResult.Success -> {
+                        "Đặt hàng thành công".showToast(this@CheckOutActivity)
+                        finish()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun openSDK(newOrder: Order) {
+        val amount= newOrder.totalPrice.toLong()+ newOrder.shippingFee.toLong()
+        val orderInfor= "Chuyen khoan don hang ${newOrder.orderId}"
+        val paymentUrl = createVnpayUrl(amount, newOrder.orderId, orderInfor)
+        val tmnCode = "VVEHDZN4"
+
+
+        val intent = Intent(this, VNP_AuthenticationActivity::class.java)
+        intent.putExtra("url", paymentUrl)
+        intent.putExtra("tmn_code", tmnCode)
+        intent.putExtra("scheme", "yummyfood")
+        intent.putExtra("is_sandbox", true)
+
+        intent.putExtra("order_data", Gson().toJson(newOrder))
+        startActivity(intent)
+    }
+
+
+    private fun createVnpayUrl(total: Long, orderId: String, orderInfor: String): String {
+        val vnpVersion = "2.1.0"
+        val vnpCommand = "pay"
+        val vnpTxnRef = orderId
+        val vnpIpAddr = "127.0.0.1"
+        val vnpTmnCode = "VVEHDZN4"
+        val orderType = "order-type"
+        val locate = "vn"
+        val vnpCurrCode = "VND"
+
+        var urlReturn = "yummyfood://result"
+
+        val vnpParams = mutableMapOf<String, String>()
+        vnpParams["vnp_Version"] = vnpVersion
+        vnpParams["vnp_Command"] = vnpCommand
+        vnpParams["vnp_TmnCode"] = vnpTmnCode
+        vnpParams["vnp_Amount"] = (total * 100).toString()
+        vnpParams["vnp_CurrCode"] = vnpCurrCode
+        vnpParams["vnp_TxnRef"] = vnpTxnRef
+        vnpParams["vnp_OrderInfo"] = orderInfor
+        vnpParams["vnp_OrderType"] = orderType
+        vnpParams["vnp_Locale"] = locate
+        vnpParams["vnp_ReturnUrl"] = urlReturn
+        vnpParams["vnp_IpAddr"] = vnpIpAddr
+
+        val cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"))
+        val formatter = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault())
+
+        val vnpCreateDate = formatter.format(cld.time)
+        vnpParams["vnp_CreateDate"] = vnpCreateDate
+
+        cld.add(Calendar.MINUTE, 15)
+        val vnpExpireDate = formatter.format(cld.time)
+        vnpParams["vnp_ExpireDate"] = vnpExpireDate
+
+        // --- Build query & hashData ---
+        val fieldNames = vnpParams.keys.sorted()
+        val hashData = StringBuilder()
+        val query = StringBuilder()
+
+        fieldNames.forEachIndexed { index, fieldName ->
+            val fieldValue = vnpParams[fieldName]
+            if (!fieldValue.isNullOrEmpty()) {
+                val encodedValue =
+                    URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString())
+                val encodedName = URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString())
+
+                hashData.append("$encodedName=$encodedValue")
+                query.append("$encodedName=$encodedValue")
+
+                if (index < fieldNames.size - 1) {
+                    hashData.append('&')
+                    query.append('&')
+                }
+            }
+        }
+
+        val seckey = "J7W1CKVRZCQ03OE22Z1PW4O7WRN0YDKV"
+        val vnpSecureHash = hmacSHA512(seckey, hashData.toString())
+        query.append("&vnp_SecureHash=$vnpSecureHash")
+
+        Log.d("VNPayDebug", "StartHash: $vnpSecureHash")
+        val paymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?$query"
+        return paymentUrl
+    }
+
+    private fun hmacSHA512(key: String, data: String): String {
+        val hmac = Mac.getInstance("HmacSHA512")
+        val secretKey = SecretKeySpec(key.toByteArray(Charsets.UTF_8), "HmacSHA512")
+        hmac.init(secretKey)
+        val hashBytes = hmac.doFinal(data.toByteArray(Charsets.UTF_8))
+        return hashBytes.joinToString("") { "%02x".format(it) }
     }
 }

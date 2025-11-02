@@ -110,12 +110,6 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/buttonTestVNPay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TestNow" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

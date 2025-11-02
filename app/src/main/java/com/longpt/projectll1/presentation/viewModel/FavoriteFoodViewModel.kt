@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
-import com.longpt.projectll1.domain.usecase.CheckFoodIsFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
 import com.longpt.projectll1.domain.usecase.RemoveFromFavoriteUC
 import kotlinx.coroutines.flow.MutableStateFlow

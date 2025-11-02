@@ -2,7 +2,6 @@ package com.longpt.projectll1.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,14 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.logger.Logger
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.AddressRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityAddressBinding
 import com.longpt.projectll1.domain.usecase.AddAddressUC
-import com.longpt.projectll1.domain.usecase.ChangeDefaultAddressUC
 import com.longpt.projectll1.domain.usecase.DeleteAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressesUC

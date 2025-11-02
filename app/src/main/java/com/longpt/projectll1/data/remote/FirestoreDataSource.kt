@@ -424,10 +424,9 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
     // tạo đơn hàng
     suspend fun createOrder(order: OrderDto): TaskResult<Unit> {
         return try {
-            val docRef = firestore.collection("orders").add(order).await()
-            val generatedId = docRef.id
-            firestore.collection("orders").document(generatedId)
-                .update("orderId", generatedId).await()
+            val orderId= order.orderId
+            firestore.collection("orders").document(orderId)
+                .set(order).await()
 
                 when (val result = clearCart(order.userId)) {
                     is TaskResult.Error -> return result

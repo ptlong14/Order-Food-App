@@ -6,14 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.Food
-import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
-import com.longpt.projectll1.domain.usecase.CheckFoodIsFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFoodByIdUC
-import com.longpt.projectll1.domain.usecase.RemoveFromFavoriteUC
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
