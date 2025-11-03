@@ -2,6 +2,7 @@ package com.longpt.projectll1.domain.model
 
 import android.os.Parcelable
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.Exclude
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -15,5 +16,8 @@ data class Food(
     val description: String = "",
     val optionGroup: List<OptionGroup> = emptyList(),
     val sold: Int = 0,
-    val createdAt: Timestamp = Timestamp.now()
+    val createdAt: Timestamp = Timestamp.now(),
+
+    @get:Exclude
+    var isFav: Boolean = false
 ) : Parcelable

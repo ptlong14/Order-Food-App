@@ -15,16 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjectLL1">
         <activity
+            android:name=".presentation.ui.HomeSectionViewAllActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.CheckOutVNPayResultActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="yummyfood" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.ui.UpdateAddressActivity"
             android:exported="false" />

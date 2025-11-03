@@ -56,7 +56,7 @@ class HomeViewModel(
             _homeSections.value = if (sections.isNotEmpty()) {
                 TaskResult.Success(sections)
             } else {
-                TaskResult.Error(Exception("Không có dữ liệu"))
+                TaskResult.Error(Exception("Không có dữ liệu món ăn."))
             }
         }
     }

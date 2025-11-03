@@ -13,5 +13,7 @@ data class FoodDto(
     val price: Double = 0.0,
     val rating: Double = 0.0,
     val sold: Int = 0,
-    val createdAt: Timestamp= Timestamp.now()
+    val createdAt: Timestamp= Timestamp.now(),
+
+    val isFav: Boolean = false
 )

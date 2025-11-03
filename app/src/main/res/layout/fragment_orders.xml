@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <FrameLayout
-        android:id="@+id/frame_header_fv_foods"
+        android:id="@+id/frame_header_orders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,25 +19,26 @@
             android:background="#FDCF53"
             android:gravity="center"
             android:paddingVertical="30dp"
-            android:text="Yêu thích"
+            android:text="Đơn hàng của bạn"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
     </FrameLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshFavorites"
+        android:id="@+id/swipeRefreshOrders"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frame_header_fv_foods">
+        app:layout_constraintTop_toBottomOf="@id/frame_header_orders">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewFavorites"
+            android:id="@+id/recyclerViewOrders"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

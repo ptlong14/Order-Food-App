@@ -63,7 +63,7 @@ class FoodRepositoryImpl(private val dataSource: FirestoreDataSource) : FoodRepo
     }
 
     override suspend fun getBestSellerFoodList(): TaskResult<List<Food>> {
-        return when (val result = dataSource.getBestSellerFoodList()) {
+       return when (val result = dataSource.getBestSellerFoodList()) {
             is TaskResult.Success -> {
                 val mapped = result.data.map { dto -> FoodMapper.fromDtoToDomain(dto) }
                 TaskResult.Success(mapped)

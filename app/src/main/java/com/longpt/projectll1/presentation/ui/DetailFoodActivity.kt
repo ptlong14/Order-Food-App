@@ -101,7 +101,7 @@ class DetailFoodActivity : AppCompatActivity() {
                 foodResult to foodResult
             }.collect { (foodResult, favResult) ->
                 when (foodResult) {
-                    is TaskResult.Loading -> Log.d("DEBUG_FLOW", "Food loading...")
+                    is TaskResult.Loading -> {}
                     is TaskResult.Success -> {
                         food = foodResult.data
 
@@ -115,23 +115,15 @@ class DetailFoodActivity : AppCompatActivity() {
 
                         if (favResult is TaskResult.Success) {
                             val isFav = favViewModel.isFoodFav(food.id)
-                            Log.d("DEBUG_FLOW", "Food ${food.id} isFav = $isFav")
-
                             binding.iBtnFavorite.setImageResource(
                                 if (isFav) R.drawable.fav else R.drawable.not_fav
                             )
                         }
                     }
 
-                    is TaskResult.Error -> Log.d(
-                        "DEBUG_FLOW",
-                        "Food error: ${foodResult.exception}"
-                    )
-                }
-                if (favResult is TaskResult.Loading) {
-                    Log.d("DEBUG_FLOW", "Favorite loading...")
-                } else if (favResult is TaskResult.Error) {
-                    Log.e("DEBUG_FLOW", "Favorite load error: ${favResult.exception}")
+                    is TaskResult.Error -> {
+                        foodResult.exception.message?.showToast(this@DetailFoodActivity)
+                    }
                 }
             }
         }
@@ -139,9 +131,9 @@ class DetailFoodActivity : AppCompatActivity() {
         lifecycleScope.launch {
             favViewModel.addFavoriteState.collect { result ->
                 when (result) {
-                    is TaskResult.Loading -> ("Loading").showToast(this@DetailFoodActivity)
+                    is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã thêm vào yêu thích").showToast(this@DetailFoodActivity)
-                    is TaskResult.Error -> ("Thêm thất bại").showToast(this@DetailFoodActivity)
+                    is TaskResult.Error -> ("Thêm thất bại: ${result.exception.message}").showToast(this@DetailFoodActivity)
                 }
             }
         }
@@ -149,9 +141,9 @@ class DetailFoodActivity : AppCompatActivity() {
         lifecycleScope.launch {
             favViewModel.removeFavoriteState.collect { result ->
                 when (result) {
-                    is TaskResult.Loading -> ("Loading").showToast(this@DetailFoodActivity)
+                    is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã xóa khỏi yêu thích").showToast(this@DetailFoodActivity)
-                    is TaskResult.Error -> ("Xóa thất bại").showToast(this@DetailFoodActivity)
+                    is TaskResult.Error -> ("Xóa thất bại: ${result.exception.message}").showToast(this@DetailFoodActivity)
                 }
             }
         }

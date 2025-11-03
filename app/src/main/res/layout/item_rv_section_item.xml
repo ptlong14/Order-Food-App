@@ -72,19 +72,17 @@
             android:layout_weight="1"
             android:text="100.000đ"
             android:textColor="#FF5722"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/iBtnAddToCart"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/add"
-            android:backgroundTint="#FF5722"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_add_v1"
+            android:background="@drawable/border_img_btn_add"
             android:foreground="?attr/selectableItemBackground"
-            android:textColor="#FF9800"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            app:tint="#F47D55" />
     </LinearLayout>
 
 </LinearLayout>

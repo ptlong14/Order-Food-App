@@ -142,6 +142,14 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
+    suspend fun getSetFavIds(userId: String): Set<String> {
+        val snapshot = firestore.collection("users")
+            .document(userId)
+            .collection("favorites")
+            .get().await()
+        if (snapshot.isEmpty) return emptySet()
+        return snapshot.documents.map { it.id }.toSet()
+    }
     //lấy ds đồ ăn bán chạy nhất
     suspend fun getBestSellerFoodList(): TaskResult<List<FoodDto>> {
         return try {

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            app:cardCornerRadius="12dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_search_view"
+                android:contentDescription="Ảnh sản phẩm"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_food" />
+            <ImageView
+                android:id="@+id/iconCategory"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="top|start"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_search_view"
+                android:contentDescription="Icon danh mục"
+                android:padding="4dp"
+                android:src="@drawable/vegan"
+                app:tint="#FF5722" />
+        </androidx.cardview.widget.CardView>
+
+
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginStart="12dp"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_weight="7"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Tên sản phẩm"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_rating"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="2dp"
+                android:text="4.7★"
+                android:textColor="#FFEB3B"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="7dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Mô tả ngắn gọn của sản phẩm..."
+            android:textColor="#666"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_weight="7"
+                android:text="₫120.000"
+                android:textColor="#FF5722"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/iBtnAddToCart"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/border_img_btn_add"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/ic_add_v1"
+                app:tint="#F47D55" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

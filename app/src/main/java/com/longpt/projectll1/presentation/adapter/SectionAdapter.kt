@@ -45,7 +45,7 @@ class SectionAdapter(
         } else if (section.foodList.isNotEmpty()) {
             holder.binding.sectionError.visibility = View.GONE
             holder.binding.rvSectionItem.adapter = SectionItemAdapter(
-                section.foodList,
+                section.foodList.take(5),
                 onClickCart,
                 onClickItem
             )
@@ -66,7 +66,6 @@ class SectionAdapter(
                 val swipe = recyclerView.findParentSwipeRefreshLayout()
                 val isIdle = newState == RecyclerView.SCROLL_STATE_IDLE
                 swipe?.isEnabled = isIdle
-                Log.d("SectionAdapter", "rvSectionItem scroll state changed: newState = $newState, swipe.isEnabled = ${swipe?.isEnabled}")
             }
         })
     }

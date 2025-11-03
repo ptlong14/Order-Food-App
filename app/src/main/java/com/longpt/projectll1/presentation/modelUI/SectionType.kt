@@ -21,3 +21,10 @@ val SectionType.title: String
         SectionType.TRENDING -> "Trend ẩm thực mới"
         SectionType.NEW -> "Sản phẩm mới"
     }
+val SectionType.names: String
+    get() = when (this) {
+        SectionType.BEST_SELLER -> "best_seller"
+        SectionType.TOP_RATED -> "top_rated"
+        SectionType.TRENDING -> "trending"
+        SectionType.NEW -> "new"
+    }

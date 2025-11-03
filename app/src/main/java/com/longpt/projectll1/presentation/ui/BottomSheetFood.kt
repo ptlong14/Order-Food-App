@@ -104,11 +104,10 @@ class BottomSheetFood : BottomSheetDialogFragment() {
             detailViewModel.food.collect { result ->
                 when (result) {
                     is TaskResult.Loading -> {
-//                        Toast.makeText(requireContext(), "Loading food", Toast.LENGTH_SHORT).show()
                     }
 
                     is TaskResult.Error -> {
-                        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
+                        result.exception.message?.showToast(requireContext())
                     }
 
                     is TaskResult.Success -> {
@@ -135,14 +134,13 @@ class BottomSheetFood : BottomSheetDialogFragment() {
             cartViewModel.addCartState.collect { result ->
                 when (result) {
                     is TaskResult.Loading -> {
-                        "Loading".showToast(requireContext())
                     }
                     is TaskResult.Success -> {
-                        "Thêm thành công".showToast(requireContext())
+                        "Đã thêm vào giỏ hàng".showToast(requireContext())
                         dismiss()
                     }
                     is TaskResult.Error -> {
-                        "Thêm thất bại: ${result.exception.message}".showToast(requireContext())
+                        "Thêm vào giỏ hàng thất bại: ${result.exception.message}".showToast(requireContext())
                     }
                 }
             }
@@ -174,7 +172,7 @@ class BottomSheetFood : BottomSheetDialogFragment() {
                 val cartItem= CartItem(cartItemId, food.name, food.imgUrl, detailViewModel.totalPrice.value/detailViewModel.quantity.value, detailViewModel.quantity.value, optionList)
                 cartViewModel.addCart(cartItem, userId)
             } else {
-                "Thêm thất bại".showToast(requireContext())
+                "Thêm vào giỏ hàng thất bại".showToast(requireContext())
             }
         }
     }

@@ -19,8 +19,6 @@ object FoodMapper {
                     OptionItem(
                         optionName = o.optionName,
                         extraCost = o.extraCost,
-                        isChecked = o.isChecked,
-                        isEnabled = o.isEnabled
                     )
                 }
             )
@@ -48,8 +46,6 @@ object FoodMapper {
                     OptionItemDto(
                         optionName = o.optionName,
                         extraCost = o.extraCost,
-                        isChecked = o.isChecked,
-                        isEnabled = o.isEnabled
                     )
                 }
             )

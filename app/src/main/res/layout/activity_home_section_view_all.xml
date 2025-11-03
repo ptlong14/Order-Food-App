@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.HomeSectionViewAllActivity">
     <FrameLayout
-        android:id="@+id/frame_header_fv_foods"
+        android:id="@+id/frame_header_see_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -12,29 +15,44 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvTitleSeeAll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FDCF53"
             android:gravity="center"
             android:paddingVertical="30dp"
-            android:text="Yêu thích"
+            android:text="Sản phẩm bán chạy"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iBtnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/bg_search_view"
+            android:clickable="true"
+            android:contentDescription="Back"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/arrow_back"
+            app:tint="#FF5722" />
     </FrameLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshFavorites"
+        android:id="@+id/swipeRefreshSeeAll"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frame_header_fv_foods">
+        app:layout_constraintTop_toBottomOf="@id/frame_header_see_all">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewFavorites"
+            android:id="@+id/rvSeeAll"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
