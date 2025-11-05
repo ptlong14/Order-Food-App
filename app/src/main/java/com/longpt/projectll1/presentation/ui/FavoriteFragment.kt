@@ -103,7 +103,7 @@ class FavoriteFragment : Fragment() {
         lifecycleScope.launch {
             favViewModel.addFavoriteState.collect { result ->
                 when (result) {
-                    is TaskResult.Loading -> ("Loading").showToast(requireContext())
+                    is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã thêm vào yêu thích").showToast(requireContext())
                     is TaskResult.Error -> ("Thêm thất bại").showToast(requireContext())
                 }
@@ -113,7 +113,7 @@ class FavoriteFragment : Fragment() {
         lifecycleScope.launch {
             favViewModel.removeFavoriteState.collect { result ->
                 when (result) {
-                    is TaskResult.Loading -> ("Loading").showToast(requireContext())
+                    is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã xóa khỏi yêu thích").showToast(requireContext())
                     is TaskResult.Error -> ("Xóa thất bại").showToast(requireContext())
                 }

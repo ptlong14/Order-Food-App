@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjectLL1">
         <activity
+            android:name=".presentation.ui.OrderDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.HomeSectionViewAllActivity"
             android:exported="false" />
         <activity

@@ -30,6 +30,7 @@ import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.DeleteAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressesUC
+import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
 import com.longpt.projectll1.domain.usecase.UpdateAddressByIdUC
 import com.longpt.projectll1.presentation.adapter.CheckOutAdapter
@@ -112,7 +113,8 @@ class CheckOutActivity : AppCompatActivity() {
         val repoOrder = OrderRepositoryImpl(FirestoreDataSource())
         val createOrderUC = CreateOrderUC(repoOrder)
         val getUserOrdersByStatusUC= GetUserOrdersByStatusUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC)
+        val getUserOrderDetailUC=GetUserOrderDetailUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
         if (selectedAddrId == null) {

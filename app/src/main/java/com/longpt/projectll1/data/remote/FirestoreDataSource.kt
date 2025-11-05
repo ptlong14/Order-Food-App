@@ -142,14 +142,6 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
-//    suspend fun getSetFavIds(userId: String): Set<String> {
-//        val snapshot = firestore.collection("users")
-//            .document(userId)
-//            .collection("favorites")
-//            .get().await()
-//        if (snapshot.isEmpty) return emptySet()
-//        return snapshot.documents.map { it.id }.toSet()
-//    }
     //lấy ds đồ ăn bán chạy nhất
     suspend fun getBestSellerFoodList(): TaskResult<List<FoodDto>> {
         return try {
@@ -469,6 +461,25 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             }
         awaitClose {
             listener.remove()
+        }
+    }
+
+    //lấy chi tiết đơn hàng theo id
+    suspend fun getUserOrderDetail(orderId: String, userId: String): TaskResult<OrderDto> {
+        return try {
+            val snapshot =
+                firestore.collection("orders")
+                    .document(orderId)
+                    .get().await()
+
+           val data= snapshot.toObject(OrderDto::class.java)
+            if (data != null && data.userId == userId) {
+                TaskResult.Success(data)
+            } else {
+                TaskResult.Error(Exception("Không tìm thấy đơn hàng hoặc đơn này không thuộc về bạn."))
+            }
+        } catch (e: Exception) {
+            TaskResult.Error(e)
         }
     }
 }

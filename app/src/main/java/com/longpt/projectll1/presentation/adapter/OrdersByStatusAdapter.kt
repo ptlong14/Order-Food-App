@@ -11,8 +11,12 @@ import com.longpt.projectll1.domain.model.Order
 import com.longpt.projectll1.utils.FormatUtil
 import com.longpt.projectll1.utils.autoUpdateList
 
-class OrdersByStatusAdapter(val type: String, var orders: List<Order>) :
-    RecyclerView.Adapter<OrdersByStatusAdapter.OrdersByStatusItemViewHolder>() {
+class OrdersByStatusAdapter(
+    val type: String,
+    var orders: List<Order>,
+    var onClickOrderDetailBtn: (String) -> Unit,
+    var onClickBtn1: (String, String) -> Unit
+) : RecyclerView.Adapter<OrdersByStatusAdapter.OrdersByStatusItemViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): OrdersByStatusItemViewHolder {
@@ -64,11 +68,19 @@ class OrdersByStatusAdapter(val type: String, var orders: List<Order>) :
         }
 
         when (type) {
-            "Pending" -> holder.binding.btn1.text = "Hủy đơn"
-            "Delivering" -> holder.binding.btn1.visibility = View.GONE
-            "Completed" -> holder.binding.btn1.text = "Đánh giá"
+            "Pending" -> {
+                holder.binding.btn1.text = "Hủy đơn"
+                holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "Cancelled") }
+            }
 
+            "Delivering" -> holder.binding.btn1.visibility = View.GONE
+            "Completed" -> {
+                holder.binding.btn1.text = "Đánh giá"
+                holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "Rated") }
+            }
+            "Cancelled" -> holder.binding.btn1.visibility = View.GONE
         }
+        holder.binding.btnOrderDetail.setOnClickListener { onClickOrderDetailBtn(order.orderId) }
     }
 
     override fun getItemCount(): Int {

@@ -8,8 +8,8 @@ interface OrderRepository {
     suspend fun createOrder(order: Order): TaskResult<Unit>
 
     fun getUserOrdersByStatus(userId: String, status: String): Flow<TaskResult<List<Order>>>
-
-    suspend fun getOrderById(orderId: String): TaskResult<Order>
-
+    suspend fun getUserOrderDetail(orderId: String, userId: String): TaskResult<Order>
     suspend fun updateOrderStatus(orderId: String, newStatus: String): TaskResult<Unit>
+    suspend fun cancelOrder(orderId: String, userId: String, reason: String): TaskResult<Unit>
+    suspend fun ratingOrder(orderId: String, userId: String, rating: Int, comment: String): TaskResult<Unit>
 }

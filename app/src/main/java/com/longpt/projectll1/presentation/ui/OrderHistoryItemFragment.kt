@@ -1,7 +1,7 @@
 package com.longpt.projectll1.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +15,7 @@ import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.OrderRepositoryImpl
 import com.longpt.projectll1.databinding.FragmentOrderHistoryItemBinding
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
+import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
 import com.longpt.projectll1.presentation.adapter.OrdersByStatusAdapter
 import com.longpt.projectll1.presentation.factory.OrderViewModelFactory
@@ -48,7 +49,8 @@ class OrderHistoryItemFragment : Fragment() {
         val repoOrder = OrderRepositoryImpl(FirestoreDataSource())
         val createOrderUC = CreateOrderUC(repoOrder)
         val getUserOrdersByStatusUC = GetUserOrdersByStatusUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC)
+        val getUserOrderDetailUC=GetUserOrderDetailUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
     }
@@ -62,7 +64,21 @@ class OrderHistoryItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ordersByStatusAdapter = OrdersByStatusAdapter(type!!, emptyList())
+        ordersByStatusAdapter =
+            OrdersByStatusAdapter(type!!, emptyList(), onClickBtn1 = { orderId, typeBtn ->
+                when (typeBtn) {
+                    "Rated" -> {
+                        "Rating for order: $orderId".showToast(requireContext())
+                    }
+                    "Cancelled" -> {
+                        "Cancel order: $orderId".showToast(requireContext())
+                    }
+                }
+            }, onClickOrderDetailBtn = {orderId->
+                val intent= Intent(requireContext(),OrderDetailActivity::class.java)
+                intent.putExtra("orderId",orderId)
+                startActivity(intent)
+            })
         binding.rvOrderItem.adapter = ordersByStatusAdapter
         binding.rvOrderItem.layoutManager = LinearLayoutManager(requireContext())
         type?.let {

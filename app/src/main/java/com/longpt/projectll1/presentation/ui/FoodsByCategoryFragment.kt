@@ -20,6 +20,7 @@ import com.longpt.projectll1.domain.usecase.GetFoodsByCategoryUC
 import com.longpt.projectll1.presentation.adapter.FoodListAdapter
 import com.longpt.projectll1.presentation.factory.FoodCategoryViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.FoodCategoryViewModel
+import com.longpt.projectll1.utils.showToast
 import kotlinx.coroutines.launch
 
 class FoodsByCategoryFragment : Fragment() {
@@ -81,11 +82,10 @@ class FoodsByCategoryFragment : Fragment() {
             viewModel.foods.collect { result ->
                 when (result) {
                     is TaskResult.Loading -> {
-                        Toast.makeText(requireContext(), "Loading food", Toast.LENGTH_SHORT).show()
                     }
 
                     is TaskResult.Error -> {
-                        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
+                        result.exception.message?.showToast(requireContext())
                     }
 
                     is TaskResult.Success -> {

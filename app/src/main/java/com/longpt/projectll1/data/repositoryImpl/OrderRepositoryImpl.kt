@@ -30,14 +30,40 @@ class OrderRepositoryImpl(private val dataSource: FirestoreDataSource): OrderRep
         }
     }
 
-
-    override suspend fun getOrderById(orderId: String): TaskResult<Order> {
-        TODO("Not yet implemented")
+    override suspend fun getUserOrderDetail(
+        orderId: String,
+        userId: String
+    ): TaskResult<Order> {
+       return when(val res= dataSource.getUserOrderDetail(orderId, userId)){
+            is TaskResult.Loading-> TaskResult.Loading
+            is TaskResult.Error -> TaskResult.Error(res.exception)
+            is TaskResult.Success ->{
+                val mapped= OrderMapper.fromDtoToDomain(res.data)
+                TaskResult.Success(mapped)
+            }
+       }
     }
 
     override suspend fun updateOrderStatus(
         orderId: String,
         newStatus: String
+    ): TaskResult<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun cancelOrder(
+        orderId: String,
+        userId: String,
+        reason: String
+    ): TaskResult<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun ratingOrder(
+        orderId: String,
+        userId: String,
+        rating: Int,
+        comment: String
     ): TaskResult<Unit> {
         TODO("Not yet implemented")
     }
