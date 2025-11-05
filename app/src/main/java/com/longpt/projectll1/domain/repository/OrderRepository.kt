@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface OrderRepository {
     suspend fun createOrder(order: Order): TaskResult<Unit>
 
-    fun getUserOrders(userId: String): Flow<TaskResult<List<Order>>>
+    fun getUserOrdersByStatus(userId: String, status: String): Flow<TaskResult<List<Order>>>
 
     suspend fun getOrderById(orderId: String): TaskResult<Order>
 

@@ -142,14 +142,14 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
-    suspend fun getSetFavIds(userId: String): Set<String> {
-        val snapshot = firestore.collection("users")
-            .document(userId)
-            .collection("favorites")
-            .get().await()
-        if (snapshot.isEmpty) return emptySet()
-        return snapshot.documents.map { it.id }.toSet()
-    }
+//    suspend fun getSetFavIds(userId: String): Set<String> {
+//        val snapshot = firestore.collection("users")
+//            .document(userId)
+//            .collection("favorites")
+//            .get().await()
+//        if (snapshot.isEmpty) return emptySet()
+//        return snapshot.documents.map { it.id }.toSet()
+//    }
     //lấy ds đồ ăn bán chạy nhất
     suspend fun getBestSellerFoodList(): TaskResult<List<FoodDto>> {
         return try {
@@ -447,4 +447,28 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
+    //lấy danh sách đơn hàng của user theo trạng thái đơn hàng
+    fun getUserOrdersByStatus(userId:String, status:String):Flow<TaskResult<List<OrderDto>>> = callbackFlow {
+        trySend(TaskResult.Loading)
+        val listener= firestore.collection("orders")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("orderStatus", status)
+            .addSnapshotListener {snapshot, err ->
+                if(err!=null){
+                    trySend(TaskResult.Error(err))
+                    return@addSnapshotListener
+                }
+                if(snapshot==null){
+                    trySend(TaskResult.Success(emptyList()))
+                }else{
+                    val data= snapshot.documents.mapNotNull {
+                        it.toObject(OrderDto::class.java)
+                    }
+                    trySend(TaskResult.Success(data))
+                }
+            }
+        awaitClose {
+            listener.remove()
+        }
+    }
 }

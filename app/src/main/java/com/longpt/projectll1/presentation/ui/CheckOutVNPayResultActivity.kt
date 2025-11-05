@@ -18,6 +18,7 @@ import com.longpt.projectll1.data.repositoryImpl.OrderRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityResultBinding
 import com.longpt.projectll1.domain.model.Order
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
+import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
 import com.longpt.projectll1.presentation.factory.OrderViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.OrderViewModel
 import com.longpt.projectll1.utils.VNPayUtils
@@ -40,7 +41,8 @@ class CheckOutVNPayResultActivity : AppCompatActivity() {
         }
         val repoOrder = OrderRepositoryImpl(FirestoreDataSource())
         val createOrderUC = CreateOrderUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC)
+        val getUserOrdersByStatusUC= GetUserOrdersByStatusUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
         val uri: Uri? = intent?.data
