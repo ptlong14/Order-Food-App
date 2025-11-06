@@ -26,6 +26,7 @@ import com.longpt.projectll1.domain.model.CartItem
 import com.longpt.projectll1.domain.model.Order
 import com.longpt.projectll1.domain.model.OrderItem
 import com.longpt.projectll1.domain.usecase.AddAddressUC
+import com.longpt.projectll1.domain.usecase.CancelledOrderUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.DeleteAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
@@ -114,7 +115,8 @@ class CheckOutActivity : AppCompatActivity() {
         val createOrderUC = CreateOrderUC(repoOrder)
         val getUserOrdersByStatusUC= GetUserOrdersByStatusUC(repoOrder)
         val getUserOrderDetailUC=GetUserOrderDetailUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC)
+        val cancelledOrderUC= CancelledOrderUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC,cancelledOrderUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
         if (selectedAddrId == null) {

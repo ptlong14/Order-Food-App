@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.CartActivity">
+    tools:context=".presentation.ui.CancelOrderActivity">
 
     <!-- Header -->
     <FrameLayout
@@ -21,7 +20,7 @@
             android:background="#FDCF53"
             android:gravity="center"
             android:paddingVertical="30dp"
-            android:text="Giỏ hàng"
+            android:text="Hủy đơn hàng"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -42,37 +41,69 @@
             app:tint="#FF5722" />
     </FrameLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshCart"
+    <LinearLayout
+        android:id="@+id/layoutReason"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:orientation="vertical"
         android:clipToPadding="false"
-
+        android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@id/layoutCheckout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame_header">
 
-
-        <FrameLayout
+        <!-- Tiêu đề -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:text="Chọn lý do hủy đơn hàng"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewCart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
+        <!-- Nhóm radio -->
+        <RadioGroup
+            android:id="@+id/radioGroupReasons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/ivEmptyCart"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_empty_cart"
-                android:visibility="gone" />
-        </FrameLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <RadioButton
+                android:id="@+id/rbReason1"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đặt nhầm món" />
+
+            <RadioButton
+                android:id="@+id/rbReason2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thay đổi địa chỉ giao hàng" />
+
+            <RadioButton
+                android:id="@+id/rbReason3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Muốn thay đổi đơn khác" />
+
+            <RadioButton
+                android:id="@+id/rbReasonOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Khác (vui lòng ghi rõ bên dưới)" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/edtOtherReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập lý do khác..."
+            android:inputType="text"
+            android:visibility="gone"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutCheckout"
@@ -87,26 +118,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-        <TextView
-            android:id="@+id/tvTotalPrice"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:paddingHorizontal="20dp"
-            android:text="0đ"
-            android:textColor="#FF5722"
-            android:textSize="16sp"
-            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnCheckout"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSubmitCancel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#FF5722"
             android:minHeight="40dp"
             android:paddingHorizontal="20dp"
-            android:text="Thanh toán"
+            android:text="Xác nhận hủy"
+            android:background="@drawable/button_v2"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
 

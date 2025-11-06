@@ -1,6 +1,7 @@
 package com.longpt.projectll1.data.remote
 
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.modelDTO.AddressDto
@@ -59,7 +60,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 .document(foodDto.id).set(dtFood).await()
             TaskResult.Success(Unit)
         } catch (e: Exception) {
-            TaskResult.Error(Exception("Có lỗi khi thêm vào yêu thích"))
+            TaskResult.Error(Exception("Có lỗi khi thêm vào yêu thích:" + e.message))
         }
     }
 
@@ -70,7 +71,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 .delete().await()
             TaskResult.Success(Unit)
         } catch (e: Exception) {
-            TaskResult.Error(Exception("Có lỗi khi xóa khỏi yêu thích"))
+            TaskResult.Error(Exception("Có lỗi khi xóa khỏi yêu thích: "+ e.message))
         }
     }
 
@@ -268,24 +269,23 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             TaskResult.Error(e)
         }
     }
+
     //xóa cart của user
-    suspend fun clearCart(userId: String): TaskResult<Unit>{
+    suspend fun clearCart(userId: String): TaskResult<Unit> {
         return try {
-           val cartSubRef= firestore.collection("users")
-               .document(userId)
-               .collection("cart")
-            val snapshot= cartSubRef.get().await()
-            if(snapshot.isEmpty){
+            val cartSubRef = firestore.collection("users").document(userId).collection("cart")
+            val snapshot = cartSubRef.get().await()
+            if (snapshot.isEmpty) {
                 return TaskResult.Error(Exception("Giỏ hàng trống"))
             }
-            val batch= firestore.batch()
+            val batch = firestore.batch()
             snapshot.documents.forEach {
                 batch.delete(it.reference)
             }
             batch.commit().await()
             TaskResult.Success(Unit)
 
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             TaskResult.Error(e)
         }
     }
@@ -316,11 +316,8 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
     //thêm địa chỉ cho user
     suspend fun addAddress(address: AddressDto, userId: String): TaskResult<Unit> {
         return try {
-            val addressSnapshot = firestore.collection("users")
-                .document(userId)
-                .collection("address")
-                .get()
-                .await()
+            val addressSnapshot =
+                firestore.collection("users").document(userId).collection("address").get().await()
 
             if (addressSnapshot.isEmpty && !address.defaultAddress) {
                 return TaskResult.Error(Exception("Địa chỉ đầu tiên phải được chọn làm mặc định"))
@@ -329,7 +326,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 firestore.collection("users").document(userId).collection("address").document()
             address.addressId = docRef.id
             docRef.set(address).await()
-            if(address.defaultAddress){
+            if (address.defaultAddress) {
                 when (val result = changeAddress(address.addressId, userId)) {
                     is TaskResult.Error -> return result
                     else -> {}
@@ -351,7 +348,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             firestore.collection("users").document(userId).collection("address").document(addressId)
                 .set(updateAddress).await()
 
-            if(updateAddress.defaultAddress){
+            if (updateAddress.defaultAddress) {
                 when (val result = changeAddress(addressId, userId)) {
                     is TaskResult.Error -> return result
                     else -> {}
@@ -413,7 +410,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
 
             if (data != null) {
                 TaskResult.Success(data)
-            }else{
+            } else {
                 TaskResult.Error(Exception("Địa chỉ đã bị xóa hoặc không khả dụng. Đã chuyển sang địa chỉ mặc định."))
             }
         } catch (e: Exception) {
@@ -424,14 +421,13 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
     // tạo đơn hàng
     suspend fun createOrder(order: OrderDto): TaskResult<Unit> {
         return try {
-            val orderId= order.orderId
-            firestore.collection("orders").document(orderId)
-                .set(order).await()
+            val orderId = order.orderId
+            firestore.collection("orders").document(orderId).set(order).await()
 
-                when (val result = clearCart(order.userId)) {
-                    is TaskResult.Error -> return result
-                    else -> {}
-                }
+            when (val result = clearCart(order.userId)) {
+                is TaskResult.Error -> return result
+                else -> {}
+            }
 
             TaskResult.Success(Unit)
         } catch (e: Exception) {
@@ -440,45 +436,87 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
     }
 
     //lấy danh sách đơn hàng của user theo trạng thái đơn hàng
-    fun getUserOrdersByStatus(userId:String, status:String):Flow<TaskResult<List<OrderDto>>> = callbackFlow {
-        trySend(TaskResult.Loading)
-        val listener= firestore.collection("orders")
-            .whereEqualTo("userId", userId)
-            .whereEqualTo("orderStatus", status)
-            .addSnapshotListener {snapshot, err ->
-                if(err!=null){
-                    trySend(TaskResult.Error(err))
-                    return@addSnapshotListener
-                }
-                if(snapshot==null){
-                    trySend(TaskResult.Success(emptyList()))
-                }else{
-                    val data= snapshot.documents.mapNotNull {
-                        it.toObject(OrderDto::class.java)
+    fun getUserOrdersByStatus(userId: String, status: String): Flow<TaskResult<List<OrderDto>>> =
+        callbackFlow {
+            trySend(TaskResult.Loading)
+            val listener = firestore.collection("orders").whereEqualTo("userId", userId)
+                .whereEqualTo("orderStatus", status).addSnapshotListener { snapshot, err ->
+                    if (err != null) {
+                        trySend(TaskResult.Error(err))
+                        return@addSnapshotListener
                     }
-                    trySend(TaskResult.Success(data))
+                    if (snapshot == null) {
+                        trySend(TaskResult.Success(emptyList()))
+                    } else {
+                        val data = snapshot.documents.mapNotNull {
+                            it.toObject(OrderDto::class.java)
+                        }
+                        trySend(TaskResult.Success(data))
+                    }
                 }
+            awaitClose {
+                listener.remove()
             }
-        awaitClose {
-            listener.remove()
         }
-    }
 
     //lấy chi tiết đơn hàng theo id
     suspend fun getUserOrderDetail(orderId: String, userId: String): TaskResult<OrderDto> {
         return try {
-            val snapshot =
-                firestore.collection("orders")
-                    .document(orderId)
-                    .get().await()
+            val snapshot = firestore.collection("orders").document(orderId).get().await()
 
-           val data= snapshot.toObject(OrderDto::class.java)
+            val data = snapshot.toObject(OrderDto::class.java)
             if (data != null && data.userId == userId) {
                 TaskResult.Success(data)
             } else {
                 TaskResult.Error(Exception("Không tìm thấy đơn hàng hoặc đơn này không thuộc về bạn."))
             }
         } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    //cập nhật trạng thái đơn hàng
+//    suspend fun updateOrderStatus(orderId: String, newStatus: String): TaskResult<Unit> {
+//        return try {
+//            val orderRef = firestore.collection("orders").document(orderId)
+//
+//            val snapshot = orderRef.get().await()
+//            if (!snapshot.exists()) {
+//                return TaskResult.Error(Exception("Không tìm thấy đơn hàng"))
+//            }
+//            orderRef.update(
+//                mapOf(
+//                    "orderStatus" to newStatus,
+//                    "updatedAt" to Timestamp.now()
+//                )
+//            ).await()
+//
+//            TaskResult.Success(Unit)
+//        } catch (e: Exception) {
+//            TaskResult.Error(e)
+//        }
+//    }
+    //hủy đơn hàng
+    suspend fun canceledOrder(orderId: String, userId: String, cancelReason:String): TaskResult<Unit> {
+        return  try{
+            val orderRef= firestore.collection("orders").document(orderId)
+            val snapshot= orderRef.get().await()
+            if(!snapshot.exists()){
+                return TaskResult.Error(Exception("Không tìm thấy đơn hàng"))
+            }
+            if(snapshot.get("userId")!=userId){
+                return TaskResult.Error(Exception("Đơn hàng này không thuộc về bạn"))
+            }
+
+            orderRef.update(
+                mapOf(
+                    "orderStatus" to "Cancelled",
+                    "cancelReason" to cancelReason,
+                    "updatedAt" to Timestamp.now()
+                )
+            )
+            TaskResult.Success(Unit)
+        }catch (e: Exception){
             TaskResult.Error(e)
         }
     }

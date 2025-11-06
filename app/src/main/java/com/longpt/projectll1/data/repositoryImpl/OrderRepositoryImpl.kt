@@ -56,7 +56,7 @@ class OrderRepositoryImpl(private val dataSource: FirestoreDataSource): OrderRep
         userId: String,
         reason: String
     ): TaskResult<Unit> {
-        TODO("Not yet implemented")
+        return dataSource.canceledOrder(orderId, userId, reason)
     }
 
     override suspend fun ratingOrder(

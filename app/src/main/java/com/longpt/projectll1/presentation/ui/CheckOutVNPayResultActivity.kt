@@ -17,6 +17,7 @@ import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.OrderRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityResultBinding
 import com.longpt.projectll1.domain.model.Order
+import com.longpt.projectll1.domain.usecase.CancelledOrderUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
@@ -44,7 +45,8 @@ class CheckOutVNPayResultActivity : AppCompatActivity() {
         val createOrderUC = CreateOrderUC(repoOrder)
         val getUserOrdersByStatusUC= GetUserOrdersByStatusUC(repoOrder)
         val getUserOrderDetailUC=GetUserOrderDetailUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC)
+        val cancelledOrderUC= CancelledOrderUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC, cancelledOrderUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
         val uri: Uri? = intent?.data
@@ -70,9 +72,14 @@ class CheckOutVNPayResultActivity : AppCompatActivity() {
             }
 
             val order = pendingOrder
-            order.orderStatus = "Paid"
+            order.orderStatus = "Pending"
             saveOrder(order)
         } else {
+            if(responseCode=="24"){
+                "Thanh toán thất bại: Người dùng hủy thanh toán".showToast(this)
+                finish()
+                return
+            }
             "Thanh toán thất bại (code=$responseCode)".showToast(this)
             finish()
         }

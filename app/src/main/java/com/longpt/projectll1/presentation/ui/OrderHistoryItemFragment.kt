@@ -14,6 +14,7 @@ import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.OrderRepositoryImpl
 import com.longpt.projectll1.databinding.FragmentOrderHistoryItemBinding
+import com.longpt.projectll1.domain.usecase.CancelledOrderUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
@@ -50,7 +51,8 @@ class OrderHistoryItemFragment : Fragment() {
         val createOrderUC = CreateOrderUC(repoOrder)
         val getUserOrdersByStatusUC = GetUserOrdersByStatusUC(repoOrder)
         val getUserOrderDetailUC=GetUserOrderDetailUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC)
+        val cancelledOrderUC= CancelledOrderUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC, cancelledOrderUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
     }
@@ -71,7 +73,9 @@ class OrderHistoryItemFragment : Fragment() {
                         "Rating for order: $orderId".showToast(requireContext())
                     }
                     "Cancelled" -> {
-                        "Cancel order: $orderId".showToast(requireContext())
+                     val intent= Intent(requireContext(), CancelOrderActivity::class.java)
+                        intent.putExtra("orderId",orderId)
+                        startActivity(intent)
                     }
                 }
             }, onClickOrderDetailBtn = {orderId->
