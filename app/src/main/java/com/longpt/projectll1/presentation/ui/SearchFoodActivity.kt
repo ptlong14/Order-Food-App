@@ -1,8 +1,11 @@
 package com.longpt.projectll1.presentation.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
@@ -32,6 +35,12 @@ class SearchFoodActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
     private var searchJob: Job? = null
 
+    private val voiceSearchLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){res->
+        if(res.resultCode== RESULT_OK){
+            val resultOfAction =  res.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            binding.searchView.setQuery(resultOfAction?.get(0), true)
+        }
+    }
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,25 +70,25 @@ class SearchFoodActivity : AppCompatActivity() {
         searchViewModel = ViewModelProvider(this, searchFactory)[SearchViewModel::class.java]
 
 
-        val adapter = SearchResultAdapter(emptyList())
+        val adapter = SearchResultAdapter(emptyList(), onClickFood = {foodId->
+            val intent = Intent(this, DetailFoodActivity::class.java)
+            intent.putExtra("foodId", foodId)
+            startActivity(intent)
+        })
         binding.rvSearchResult.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvSearchResult.adapter = adapter
 
-//        binding.btnVoice.setOnClickListener {
-//            searchViewModel.syncData()
-//        }
-//        lifecycleScope.launch {
-//            searchViewModel.syncState.collect { res ->
-//                when(res) {
-//                    is TaskResult.Loading -> {}
-//                    is TaskResult.Success -> {"Sync data success".showToast(this@SearchFoodActivity)}
-//                    is TaskResult.Error -> {
-//                        res.exception.message?.showToast(this@SearchFoodActivity)
-//                    }
-//                }
-//            }
-//        }
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
+        binding.btnVoice.setOnClickListener {
+            val intent= Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            voiceSearchLauncher.launch(intent)
+        }
+
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -95,9 +104,15 @@ class SearchFoodActivity : AppCompatActivity() {
                 searchJob?.cancel()
                 searchJob = lifecycleScope.launch {
                     delay(200)
-                    newText?.let {
-                        searchViewModel.searchFood(it)
-                        binding.tvTitle.text = "Kết quả tìm kiếm cho: $it"
+
+                    val text = newText?.trim().orEmpty()
+
+                    if (text.isNotEmpty()) {
+                        searchViewModel.searchFood(text)
+                        binding.tvTitle.text = "Kết quả tìm kiếm cho: $text"
+                    } else {
+                        adapter.updateData(emptyList())
+                        binding.tvTitle.text = "Nhập để tìm món"
                     }
                 }
                 return true
@@ -117,9 +132,6 @@ class SearchFoodActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-        binding.btnBack.setOnClickListener {
-            finish()
         }
     }
 }

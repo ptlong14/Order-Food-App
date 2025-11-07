@@ -9,7 +9,9 @@ import com.longpt.projectll1.presentation.modelUI.FoodsSearchResult
 import com.longpt.projectll1.utils.FormatUtil
 import com.longpt.projectll1.utils.autoUpdateList
 
-class SearchResultAdapter(var listResult: List<FoodsSearchResult>): RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
+class SearchResultAdapter(var listResult: List<FoodsSearchResult>,
+    val onClickFood: (String) -> Unit
+    ): RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -26,6 +28,9 @@ class SearchResultAdapter(var listResult: List<FoodsSearchResult>): RecyclerView
         holder.binding.tvName.text= result.name
         holder.binding.tvPrice.text= FormatUtil.moneyFormat(result.price.toDouble())
         Glide.with(holder.itemView.context).load(result.imgUrl).into(holder.binding.imgFood)
+        holder.binding.layoutContent.setOnClickListener {
+            onClickFood(result.id)
+        }
     }
 
     override fun getItemCount(): Int {
