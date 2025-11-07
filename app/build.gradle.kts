@@ -81,4 +81,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.5")
     implementation("com.squareup.picasso:picasso:2.8")
     implementation(files("libs/merchant-1.0.25.aar"))
+    implementation("org.typesense:typesense-java:1.3.0")
 }

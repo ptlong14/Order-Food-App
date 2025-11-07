@@ -18,6 +18,13 @@ class TopBarView @JvmOverloads constructor(
 
     init {
 
+        binding.searchViewFood.setOnClickListener {
+            val intent = Intent(context, SearchFoodActivity::class.java)
+            if (context !is Activity) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        }
         binding.iBtnCart.setOnClickListener {
             val intent = Intent(context, CartActivity::class.java)
             if (context !is Activity) {

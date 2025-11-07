@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/searchViewFood"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
@@ -31,11 +31,11 @@
         android:scaleType="centerInside"
         android:src="@drawable/cart"
         android:backgroundTint="#FDCF53"
-        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintBottom_toBottomOf="@+id/searchViewFood"
         app:layout_constraintEnd_toStartOf="@+id/iBtnChatWithShop"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/searchView"
-        app:layout_constraintTop_toTopOf="@+id/searchView" />
+        app:layout_constraintStart_toEndOf="@+id/searchViewFood"
+        app:layout_constraintTop_toTopOf="@+id/searchViewFood" />
 
     <ImageButton
         android:id="@+id/iBtnChatWithShop"

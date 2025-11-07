@@ -3,10 +3,12 @@ package com.longpt.projectll1.data.repositoryImpl
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.mapper.FoodMapper
 import com.longpt.projectll1.data.remote.FirestoreDataSource
+import com.longpt.projectll1.data.remote.TypesenseDataSource
 import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.repository.FoodRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.typesense.model.SearchResult
 
 class FoodRepositoryImpl(private val dataSource: FirestoreDataSource) : FoodRepository {
     override suspend fun getFoodListByCategory(category: String): TaskResult<List<Food>> {

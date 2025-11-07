@@ -33,6 +33,22 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
 
         }
     }
+    //lấy toàn bộ ds món ăn
+    suspend fun getAllFoodList(): TaskResult<List<FoodDto>>{
+        return try {
+            val snapshot= firestore.collection("foods").get().await()
+
+            val data= snapshot.documents.mapNotNull{
+                it.toObject(FoodDto::class.java)?.copy(id = it.id)
+            }
+            if(data.isEmpty()){
+                return TaskResult.Error(Exception("Không có món ăn nào"))
+            }
+            TaskResult.Success(data)
+        }catch (e: Exception){
+            TaskResult.Error(e)
+        }
+    }
 
     //lấy ds đồ ăn theo id
     suspend fun getFoodById(foodId: String): TaskResult<FoodDto> {
