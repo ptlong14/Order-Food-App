@@ -134,7 +134,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Option groups -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcOptionGroup"
             android:layout_width="0dp"
@@ -143,21 +142,40 @@
             app:layout_constraintTop_toBottomOf="@id/imgFood"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- Nút thêm giỏ hàng -->
-        <Button
-            android:id="@+id/btnAddToCart"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/layoutButtons"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Thêm vào giỏ hàng"
-            android:textAllCaps="false"
-            android:backgroundTint="#FF9800"
-            android:textColor="@android:color/white"
-            android:elevation="2dp"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@id/rcOptionGroup"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/btnAddToCart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Thêm vào giỏ hàng"
+                android:textAllCaps="false"
+                android:backgroundTint="#FF9800"
+                android:textColor="@android:color/white"
+                android:elevation="2dp"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnBuyNow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Mua ngay"
+                android:textAllCaps="false"
+                android:backgroundTint="#FF5722"
+                android:textColor="@android:color/white"
+                android:elevation="2dp"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

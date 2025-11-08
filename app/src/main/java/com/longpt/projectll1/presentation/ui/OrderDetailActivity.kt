@@ -21,6 +21,7 @@ import com.longpt.projectll1.domain.usecase.CancelledOrderUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
+import com.longpt.projectll1.domain.usecase.ReOrderUC
 import com.longpt.projectll1.presentation.adapter.CheckOutAdapter
 import com.longpt.projectll1.presentation.adapter.OrderDetailAdapter
 import com.longpt.projectll1.presentation.factory.OrderViewModelFactory
@@ -52,8 +53,9 @@ class OrderDetailActivity : AppCompatActivity() {
         val getUserOrdersByStatusUC = GetUserOrdersByStatusUC(repoOrder)
         val getUserOrderDetailUC = GetUserOrderDetailUC(repoOrder)
         val cancelledOrderUC= CancelledOrderUC(repoOrder)
+        val reOrderUC= ReOrderUC(repoOrder)
         val orderFactory =
-            OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC, cancelledOrderUC)
+            OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC, cancelledOrderUC, reOrderUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
         orderId = intent.getStringExtra("orderId")

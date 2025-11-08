@@ -18,6 +18,7 @@ import com.longpt.projectll1.domain.usecase.CancelledOrderUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
+import com.longpt.projectll1.domain.usecase.ReOrderUC
 import com.longpt.projectll1.presentation.adapter.OrdersByStatusAdapter
 import com.longpt.projectll1.presentation.factory.OrderViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.OrderViewModel
@@ -50,9 +51,16 @@ class OrderHistoryItemFragment : Fragment() {
         val repoOrder = OrderRepositoryImpl(FirestoreDataSource())
         val createOrderUC = CreateOrderUC(repoOrder)
         val getUserOrdersByStatusUC = GetUserOrdersByStatusUC(repoOrder)
-        val getUserOrderDetailUC=GetUserOrderDetailUC(repoOrder)
-        val cancelledOrderUC= CancelledOrderUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC, cancelledOrderUC)
+        val getUserOrderDetailUC = GetUserOrderDetailUC(repoOrder)
+        val cancelledOrderUC = CancelledOrderUC(repoOrder)
+        val reOrderUC = ReOrderUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(
+            createOrderUC,
+            getUserOrdersByStatusUC,
+            getUserOrderDetailUC,
+            cancelledOrderUC,
+            reOrderUC
+        )
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
     }
@@ -72,19 +80,45 @@ class OrderHistoryItemFragment : Fragment() {
                     "Rated" -> {
                         "Rating for order: $orderId".showToast(requireContext())
                     }
+
                     "Cancelled" -> {
-                     val intent= Intent(requireContext(), CancelOrderActivity::class.java)
-                        intent.putExtra("orderId",orderId)
+                        val intent = Intent(requireContext(), CancelOrderActivity::class.java)
+                        intent.putExtra("orderId", orderId)
                         startActivity(intent)
                     }
+
+                    "BuyAgain" -> {
+                        orderViewModel.reOrder(orderId, userId)
+                        lifecycleScope.launch {
+                            orderViewModel.reOrderState.collect { res ->
+                                when (res) {
+                                    is TaskResult.Loading -> {}
+                                    is TaskResult.Error -> {
+                                        res.exception.message?.showToast(requireContext())
+                                    }
+
+                                    is TaskResult.Success -> {
+                                        val intent =
+                                            Intent(requireContext(), CheckOutActivity::class.java)
+                                        intent.putParcelableArrayListExtra(
+                                            "orderFoodData",
+                                            ArrayList(res.data)
+                                        )
+                                        startActivity(intent)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-            }, onClickOrderDetailBtn = {orderId->
-                val intent= Intent(requireContext(),OrderDetailActivity::class.java)
-                intent.putExtra("orderId",orderId)
+            }, onClickOrderDetailBtn = { orderId ->
+                val intent = Intent(requireContext(), OrderDetailActivity::class.java)
+                intent.putExtra("orderId", orderId)
                 startActivity(intent)
             })
         binding.rvOrderItem.adapter = ordersByStatusAdapter
         binding.rvOrderItem.layoutManager = LinearLayoutManager(requireContext())
+
         type?.let {
             orderViewModel.observeOrdersByStatus(userId, it)
             lifecycleScope.launch {

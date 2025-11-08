@@ -144,9 +144,7 @@ class CartActivity : AppCompatActivity() {
                     is TaskResult.Error -> {
                         binding.swipeRefreshCart.isRefreshing = false
                         cartAdapter.updateData(emptyList())
-                        Toast.makeText(
-                            this@CartActivity, result.exception.message, Toast.LENGTH_SHORT
-                        ).show()
+                        result.exception.message?.showToast(this@CartActivity)
                     }
                 }
             }

@@ -33,6 +33,7 @@ import com.longpt.projectll1.domain.usecase.GetAddressByIdUC
 import com.longpt.projectll1.domain.usecase.GetAddressesUC
 import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
+import com.longpt.projectll1.domain.usecase.ReOrderUC
 import com.longpt.projectll1.domain.usecase.UpdateAddressByIdUC
 import com.longpt.projectll1.presentation.adapter.CheckOutAdapter
 import com.longpt.projectll1.presentation.factory.AddressViewModelFactory
@@ -116,7 +117,8 @@ class CheckOutActivity : AppCompatActivity() {
         val getUserOrdersByStatusUC= GetUserOrdersByStatusUC(repoOrder)
         val getUserOrderDetailUC=GetUserOrderDetailUC(repoOrder)
         val cancelledOrderUC= CancelledOrderUC(repoOrder)
-        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC,cancelledOrderUC)
+        val reOrderUC= ReOrderUC(repoOrder)
+        val orderFactory = OrderViewModelFactory(createOrderUC, getUserOrdersByStatusUC, getUserOrderDetailUC,cancelledOrderUC, reOrderUC)
         orderViewModel = ViewModelProvider(this, orderFactory)[OrderViewModel::class.java]
 
         if (selectedAddrId == null) {
@@ -202,7 +204,7 @@ class CheckOutActivity : AppCompatActivity() {
                     paymentMethod,
                     shippingFee,
                     orderNote,
-                    orderStatus= if (paymentMethod == "COD") "Pending" else "Paid, Pending",
+                    orderStatus= "Pending",
                     createdAt,
                     updatedAt
                 )

@@ -72,11 +72,15 @@ class OrdersByStatusAdapter(
                 holder.binding.btn1.text = "Hủy đơn"
                 holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "Cancelled") }
             }
-
             "Delivering" -> holder.binding.btn1.visibility = View.GONE
             "Completed" -> {
-                holder.binding.btn1.text = "Đánh giá"
-                holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "Rated") }
+                if(order.orderList.size==1){
+                    holder.binding.btn1.text = "Đánh giá"
+                    holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "Rated") }
+                }else{
+                    holder.binding.btn1.text = "Mua lại"
+                    holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "BuyAgain") }
+                }
             }
             "Cancelled" -> holder.binding.btn1.visibility = View.GONE
         }

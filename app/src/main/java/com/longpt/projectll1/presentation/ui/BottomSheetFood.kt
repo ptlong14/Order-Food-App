@@ -1,5 +1,6 @@
 package com.longpt.projectll1.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -172,6 +173,21 @@ class BottomSheetFood : BottomSheetDialogFragment() {
                 cartViewModel.addCart(cartItem, userId)
             } else {
                 "Thêm vào giỏ hàng thất bại".showToast(requireContext())
+            }
+        }
+
+        binding.btnBuyNow.setOnClickListener {
+            if(detailViewModel.canAddToCart.value==true){
+                val optionList= detailViewModel.getSelectedOptionDescriptions()
+                val optionString = optionList
+                    .joinToString(", ") { it.substringAfter(": ").trim() }
+                val cartItemId= GenerateUtil.generateCartItemId(food.id, optionString)
+                val cartItem= CartItem(cartItemId, food.name, food.imgUrl, detailViewModel.totalPrice.value/detailViewModel.quantity.value, detailViewModel.quantity.value, optionList)
+                val intent = Intent(requireContext(), CheckOutActivity::class.java)
+                intent.putParcelableArrayListExtra("orderFoodData", arrayListOf(cartItem))
+                startActivity(intent)
+            }else{
+                "Không thể mua hàng".showToast(requireContext())
             }
         }
     }

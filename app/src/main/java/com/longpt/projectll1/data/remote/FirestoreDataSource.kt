@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.longpt.projectll1.core.TaskResult
+import com.longpt.projectll1.data.mapper.OrderMapper
 import com.longpt.projectll1.data.modelDTO.AddressDto
 import com.longpt.projectll1.data.modelDTO.BannerDto
 import com.longpt.projectll1.data.modelDTO.CartItemDto
@@ -33,19 +34,20 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
 
         }
     }
-    //lấy toàn bộ ds món ăn
-    suspend fun getAllFoodList(): TaskResult<List<FoodDto>>{
-        return try {
-            val snapshot= firestore.collection("foods").get().await()
 
-            val data= snapshot.documents.mapNotNull{
+    //lấy toàn bộ ds món ăn
+    suspend fun getAllFoodList(): TaskResult<List<FoodDto>> {
+        return try {
+            val snapshot = firestore.collection("foods").get().await()
+
+            val data = snapshot.documents.mapNotNull {
                 it.toObject(FoodDto::class.java)?.copy(id = it.id)
             }
-            if(data.isEmpty()){
+            if (data.isEmpty()) {
                 return TaskResult.Error(Exception("Không có món ăn nào"))
             }
             TaskResult.Success(data)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             TaskResult.Error(e)
         }
     }
@@ -87,7 +89,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 .delete().await()
             TaskResult.Success(Unit)
         } catch (e: Exception) {
-            TaskResult.Error(Exception("Có lỗi khi xóa khỏi yêu thích: "+ e.message))
+            TaskResult.Error(Exception("Có lỗi khi xóa khỏi yêu thích: " + e.message))
         }
     }
 
@@ -291,9 +293,6 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         return try {
             val cartSubRef = firestore.collection("users").document(userId).collection("cart")
             val snapshot = cartSubRef.get().await()
-            if (snapshot.isEmpty) {
-                return TaskResult.Error(Exception("Giỏ hàng trống"))
-            }
             val batch = firestore.batch()
             snapshot.documents.forEach {
                 batch.delete(it.reference)
@@ -513,14 +512,18 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
 //        }
 //    }
     //hủy đơn hàng
-    suspend fun canceledOrder(orderId: String, userId: String, cancelReason:String): TaskResult<Unit> {
-        return  try{
-            val orderRef= firestore.collection("orders").document(orderId)
-            val snapshot= orderRef.get().await()
-            if(!snapshot.exists()){
+    suspend fun canceledOrder(
+        orderId: String,
+        userId: String,
+        cancelReason: String
+    ): TaskResult<Unit> {
+        return try {
+            val orderRef = firestore.collection("orders").document(orderId)
+            val snapshot = orderRef.get().await()
+            if (!snapshot.exists()) {
                 return TaskResult.Error(Exception("Không tìm thấy đơn hàng"))
             }
-            if(snapshot.get("userId")!=userId){
+            if (snapshot.get("userId") != userId) {
                 return TaskResult.Error(Exception("Đơn hàng này không thuộc về bạn"))
             }
 
@@ -532,7 +535,27 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 )
             )
             TaskResult.Success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    //mua lại đơn hàng
+    suspend fun reOrder(orderId: String, userId: String): TaskResult<List<CartItemDto>> {
+        return try {
+
+            val snapshot = firestore.collection("orders").document(orderId).get().await()
+            val order = snapshot.toObject(OrderDto::class.java)
+            if (order == null) {
+                return TaskResult.Error(Exception("Không tìm thấy đơn hàng"))
+            }
+            if (order.userId != userId) {
+                return TaskResult.Error(Exception("Đơn hàng này không thuộc về bạn"))
+            }
+            val orderItems = order.orderList
+            val cartItemMapped= OrderMapper.toCartItemDto(orderItems)
+            TaskResult.Success(cartItemMapped)
+        } catch (e: Exception) {
             TaskResult.Error(e)
         }
     }

@@ -1,5 +1,6 @@
 package com.longpt.projectll1.data.mapper
 
+import com.longpt.projectll1.data.modelDTO.CartItemDto
 import com.longpt.projectll1.data.modelDTO.OrderDto
 import com.longpt.projectll1.data.modelDTO.OrderItemDto
 import com.longpt.projectll1.domain.model.Order
@@ -57,5 +58,19 @@ object OrderMapper {
             createdAt = domain.createdAt,
             updatedAt = domain.updatedAt
         )
+    }
+
+    fun toCartItemDto(listOrderItem: List<OrderItemDto>): List<CartItemDto>{
+        val mapped= listOrderItem.map {
+            CartItemDto(
+                cartItemId = it.orderItemId,
+                foodName = it.orderFoodName,
+                foodImgUrl = it.orderFoodImgUrl,
+                unitPrice = it.orderUnitPrice,
+                cartItemQuantity = it.orderItemQuantity,
+                selectedOptions = it.selectedOptions
+            )
+        }
+        return mapped
     }
 }

@@ -25,4 +25,18 @@ object CartMapper {
             selectedOptions = domain.selectedOptions
         )
     }
+
+    fun toCartItems(listCartItemDto: List<CartItemDto>): List<CartItem> {
+        val mapped = listCartItemDto.map {
+            CartItem(
+                cartItemId = it.cartItemId,
+                foodName = it.foodName,
+                foodImgUrl = it.foodImgUrl,
+                unitPrice = it.unitPrice,
+                cartItemQuantity = it.cartItemQuantity,
+                selectedOptions = it.selectedOptions
+            )
+        }
+        return mapped
+    }
 }

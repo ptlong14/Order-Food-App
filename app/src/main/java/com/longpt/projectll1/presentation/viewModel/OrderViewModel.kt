@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.CartItem
-import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.model.Order
 import com.longpt.projectll1.domain.usecase.CancelledOrderUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
 import com.longpt.projectll1.domain.usecase.GetUserOrdersByStatusUC
+import com.longpt.projectll1.domain.usecase.ReOrderUC
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,7 +18,8 @@ class OrderViewModel(
     private val createOrderUC: CreateOrderUC,
     private val getUserOrdersByStatusUC: GetUserOrdersByStatusUC,
     private val getUserOrderDetailUC: GetUserOrderDetailUC,
-    private val cancelledOrderUC: CancelledOrderUC
+    private val cancelledOrderUC: CancelledOrderUC,
+    private val reOrderUC: ReOrderUC
 ): ViewModel() {
     private val _createOrderState = MutableStateFlow<TaskResult<Unit>>(TaskResult.Loading)
     val createOrderState: StateFlow<TaskResult<Unit>> = _createOrderState
@@ -32,6 +33,9 @@ class OrderViewModel(
     private val _cancelOrderState = MutableStateFlow<TaskResult<Unit>>(TaskResult.Loading)
     val cancelOrderState: StateFlow<TaskResult<Unit>> = _cancelOrderState
 
+    private val _reOrderState = MutableStateFlow<TaskResult<List<CartItem>>>(TaskResult.Loading)
+    val reOrderState: StateFlow<TaskResult<List<CartItem>>> = _reOrderState
+
     fun createOrder(order: Order){
         viewModelScope.launch {
             _createOrderState.value = TaskResult.Loading
@@ -44,6 +48,13 @@ class OrderViewModel(
             _cancelOrderState.value = TaskResult.Loading
             val result = cancelledOrderUC(orderId, userId, reason)
             _cancelOrderState.value = result
+        }
+    }
+    fun reOrder(orderId:String, userId:String){
+        viewModelScope.launch {
+            _reOrderState.value = TaskResult.Loading
+            val result = reOrderUC(orderId, userId)
+            _reOrderState.value = result
         }
     }
 
