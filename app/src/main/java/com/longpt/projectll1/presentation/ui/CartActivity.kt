@@ -92,13 +92,19 @@ class CartActivity : AppCompatActivity() {
                         cartAdapter.updateData(result.data)
                         if (result.data.isEmpty()) {
                             binding.recyclerViewCart.visibility = View.GONE
-                            binding.ivEmptyCart.visibility = View.VISIBLE
+                            binding.layoutEmptyCart.visibility = View.VISIBLE
+                            binding.layoutCheckout.visibility= View.GONE
+                            binding.btnGoHome.setOnClickListener {
+                                val intent = Intent(this@CartActivity, MainActivity::class.java)
+                                startActivity(intent)
+                            }
                         } else {
                             binding.recyclerViewCart.visibility = View.VISIBLE
-                            binding.ivEmptyCart.visibility = View.GONE
+                            binding.layoutEmptyCart.visibility = View.GONE
+                            binding.layoutCheckout.visibility= View.VISIBLE
+                            val totalPrice = result.data.sumOf { it.cartItemQuantity * it.unitPrice }
+                            binding.tvTotalPrice.text = FormatUtil.moneyFormat(totalPrice)
                         }
-                        val totalPrice = result.data.sumOf { it.cartItemQuantity * it.unitPrice }
-                        binding.tvTotalPrice.text = FormatUtil.moneyFormat(totalPrice)
                     }
 
                     is TaskResult.Error -> {

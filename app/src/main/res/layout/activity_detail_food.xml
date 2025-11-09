@@ -20,7 +20,7 @@
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
         android:scaleType="centerInside"
-        android:src="@drawable/arrow_back"
+        android:src="@drawable/im_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="#FF5722" />
@@ -51,7 +51,7 @@
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
         android:scaleType="centerInside"
-        android:src="@drawable/not_fav"
+        android:src="@drawable/im_not_fav"
         app:layout_constraintBottom_toBottomOf="@id/iBtnBack"
         app:layout_constraintEnd_toStartOf="@+id/iBtnShare"
         app:layout_constraintTop_toTopOf="@id/iBtnBack" />
@@ -111,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/img_food" />
+                    android:src="@drawable/im_food_default" />
             </androidx.cardview.widget.CardView>
 
             <!-- Rating -->
@@ -200,7 +200,7 @@
                     android:id="@+id/iBtnAddToCart"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/add"
+                    android:background="@drawable/im_add"
                     android:backgroundTint="#FF5722"
                     android:foreground="?attr/selectableItemBackground"
                     android:textColor="#FF9800"

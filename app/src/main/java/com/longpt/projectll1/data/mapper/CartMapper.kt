@@ -7,6 +7,7 @@ object CartMapper {
     fun fromDtoToDomain(dto: CartItemDto): CartItem {
         return CartItem(
             cartItemId = dto.cartItemId,
+            foodId = dto.foodId,
             foodName = dto.foodName,
             foodImgUrl = dto.foodImgUrl,
             unitPrice = dto.unitPrice,
@@ -18,6 +19,7 @@ object CartMapper {
     fun fromDomainToDto(domain: CartItem): CartItemDto {
         return CartItemDto(
             cartItemId = domain.cartItemId,
+            foodId = domain.foodId,
             foodName = domain.foodName,
             foodImgUrl = domain.foodImgUrl,
             unitPrice = domain.unitPrice,
@@ -30,6 +32,7 @@ object CartMapper {
         val mapped = listCartItemDto.map {
             CartItem(
                 cartItemId = it.cartItemId,
+                foodId = it.foodId,
                 foodName = it.foodName,
                 foodImgUrl = it.foodImgUrl,
                 unitPrice = it.unitPrice,

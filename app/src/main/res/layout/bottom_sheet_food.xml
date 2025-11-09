@@ -47,7 +47,7 @@
             android:layout_height="110dp"
             android:layout_marginTop="12dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_food"
+            android:src="@drawable/im_food_default"
             app:layout_constraintTop_toBottomOf="@id/tvTitle"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -109,7 +109,7 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:background="@drawable/subtract"
+                        android:background="@drawable/im_subtract"
                        android:backgroundTint="#FF5722"
                         android:contentDescription="Giảm" />
 
@@ -127,7 +127,7 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:background="@drawable/add"
+                        android:background="@drawable/im_add"
                         android:backgroundTint="#FF5722"
                         android:contentDescription="Tăng" />
                 </LinearLayout>

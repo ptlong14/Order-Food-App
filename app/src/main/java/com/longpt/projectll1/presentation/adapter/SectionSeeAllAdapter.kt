@@ -38,19 +38,19 @@ class SectionSeeAllAdapter(
         val category = food.category
         when (category) {
             "snack" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.snack)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_snack)
             }
             "meal" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.meal)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_meal)
             }
             "vegan" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.vegan)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_vegan)
             }
             "dessert" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.dessert)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_dessert)
             }
             "drink" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.drink)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_drink)
             }
         }
 

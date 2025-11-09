@@ -38,7 +38,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@drawable/arrow_back"
+            android:src="@drawable/im_arrow_back"
             app:tint="#FF5722" />
     </FrameLayout>
 
@@ -64,13 +64,46 @@
                 android:layout_height="match_parent"
                 android:scrollbars="vertical" />
 
-            <ImageView
-                android:id="@+id/ivEmptyCart"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_empty_cart"
-                android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/layoutEmptyCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_gravity="center">
+                <ImageView
+                    android:id="@+id/ivEmptyCart"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/im_empty_cart"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#353434"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:layout_gravity="center"
+                    android:text="Giỏ hàng trống rồi."/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5F5F5F"
+                    android:textSize="16dp"
+                    android:layout_gravity="center"
+                    android:text="Lướt Yummy, lựa hàng ngay đi!"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnGoHome"
+                    android:background="@drawable/button_v1"
+                    android:textColor="#FF5722"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Mua sắm ngay"
+                    android:paddingHorizontal="10dp"
+                    android:layout_marginVertical="10dp"/>
+            </LinearLayout>
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -109,7 +142,6 @@
             android:text="Thanh toán"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

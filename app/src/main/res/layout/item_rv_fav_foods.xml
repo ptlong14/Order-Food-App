@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="Ảnh món ăn"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_food" />
+                android:src="@drawable/im_food_default" />
 
             <ImageView
                 android:id="@+id/iconCategory"
@@ -37,7 +37,7 @@
                 android:background="@drawable/bg_search_view"
                 android:contentDescription="Icon danh mục"
                 android:padding="4dp"
-                android:src="@drawable/vegan"
+                android:src="@drawable/im_vegan"
                 app:tint="#FF5722" />
 
             <ImageView
@@ -50,7 +50,7 @@
                 android:background="@drawable/bg_search_view"
                 android:contentDescription="icon yêu thích"
                 android:padding="5dp"
-                android:src="@drawable/fav"
+                android:src="@drawable/im_fav"
                 app:tint="#FF5722" />
 
         </FrameLayout>

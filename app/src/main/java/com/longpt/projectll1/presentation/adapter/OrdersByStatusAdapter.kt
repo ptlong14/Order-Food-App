@@ -15,7 +15,7 @@ class OrdersByStatusAdapter(
     val type: String,
     var orders: List<Order>,
     var onClickOrderDetailBtn: (String) -> Unit,
-    var onClickBtn1: (String, String) -> Unit
+    var onClickBtn: (String, String) -> Unit
 ) : RecyclerView.Adapter<OrdersByStatusAdapter.OrdersByStatusItemViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -70,21 +70,55 @@ class OrdersByStatusAdapter(
         when (type) {
             "Pending" -> {
                 holder.binding.btn1.text = "Hủy đơn"
-                holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "Cancelled") }
+                holder.binding.btn1.setOnClickListener { onClickBtn(order.orderId, "Cancelled") }
+                holder.binding.btn2.visibility = View.GONE
             }
-            "Delivering" -> holder.binding.btn1.visibility = View.GONE
+
+            "Delivering" -> {
+                holder.binding.btn1.visibility = View.GONE
+                holder.binding.btn2.visibility = View.GONE
+            }
+
             "Completed" -> {
-                if(order.orderList.size==1){
+                if (order.orderList.size == 1) {
+                    holder.binding.btn1.visibility = View.VISIBLE
                     holder.binding.btn1.text = "Đánh giá"
-                    holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "Rated") }
-                }else{
-                    holder.binding.btn1.text = "Mua lại"
-                    holder.binding.btn1.setOnClickListener { onClickBtn1(order.orderId, "BuyAgain") }
+                    holder.binding.btn1.setOnClickListener {
+                        onClickBtn(order.orderList[0].foodId, "Rating")
+                    }
+
+                    holder.binding.btn2.visibility = View.VISIBLE
+                    holder.binding.btn2.text = "Mua lại"
+                    holder.binding.btn2.setOnClickListener {
+                        onClickBtn(order.orderId, "Reorder")
+                    }
+
+                } else {
+                    holder.binding.btn1.visibility = View.GONE
+
+                    holder.binding.btn2.visibility = View.VISIBLE
+                    holder.binding.btn2.text = "Mua lại"
+                    holder.binding.btn2.setOnClickListener {
+                        onClickBtn(order.orderId, "Reorder")
+                    }
                 }
             }
-            "Cancelled" -> holder.binding.btn1.visibility = View.GONE
+
+            "Cancelled" -> {
+                holder.binding.btn1.visibility = View.VISIBLE
+                holder.binding.btn1.text = "Lý do hủy"
+                holder.binding.btn1.setOnClickListener {
+                    onClickBtn(order.orderId, "Reason")
+                }
+
+                holder.binding.btn2.visibility = View.VISIBLE
+                holder.binding.btn2.text = "Mua lại"
+                holder.binding.btn2.setOnClickListener {
+                    onClickBtn(order.orderId, "Reorder")
+                }
+            }
         }
-        holder.binding.btnOrderDetail.setOnClickListener { onClickOrderDetailBtn(order.orderId) }
+        holder.binding.layoutImages.setOnClickListener { onClickOrderDetailBtn(order.orderId) }
     }
 
     override fun getItemCount(): Int {

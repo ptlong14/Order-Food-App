@@ -13,7 +13,7 @@
         android:layout_height="60dp"
         android:padding="12dp"
         android:scaleType="centerInside"
-        android:src="@drawable/menu"
+        android:src="@drawable/im_menu"
         app:tint="@color/tab_text_color" />
 
     <TextView

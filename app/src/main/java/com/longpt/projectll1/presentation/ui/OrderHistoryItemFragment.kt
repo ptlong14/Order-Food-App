@@ -75,9 +75,9 @@ class OrderHistoryItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ordersByStatusAdapter =
-            OrdersByStatusAdapter(type!!, emptyList(), onClickBtn1 = { orderId, typeBtn ->
+            OrdersByStatusAdapter(type!!, emptyList(), onClickBtn = { orderId, typeBtn ->
                 when (typeBtn) {
-                    "Rated" -> {
+                    "Rating" -> {
                         "Rating for order: $orderId".showToast(requireContext())
                     }
 
@@ -87,7 +87,7 @@ class OrderHistoryItemFragment : Fragment() {
                         startActivity(intent)
                     }
 
-                    "BuyAgain" -> {
+                    "Reorder" -> {
                         orderViewModel.reOrder(orderId, userId)
                         lifecycleScope.launch {
                             orderViewModel.reOrderState.collect { res ->
@@ -101,8 +101,7 @@ class OrderHistoryItemFragment : Fragment() {
                                         val intent =
                                             Intent(requireContext(), CheckOutActivity::class.java)
                                         intent.putParcelableArrayListExtra(
-                                            "orderFoodData",
-                                            ArrayList(res.data)
+                                            "orderFoodData", ArrayList(res.data)
                                         )
                                         startActivity(intent)
                                     }
@@ -135,6 +134,14 @@ class OrderHistoryItemFragment : Fragment() {
                         is TaskResult.Success -> {
                             binding.swipeRefreshOrders.isRefreshing = false
                             ordersByStatusAdapter.updateData(res.data)
+                            if (res.data.isEmpty()) {
+                                binding.rvOrderItem.visibility = View.GONE
+                                binding.layoutEmptyOrder.visibility = View.VISIBLE
+                            } else {
+                                binding.rvOrderItem.visibility = View.VISIBLE
+                                binding.layoutEmptyOrder.visibility = View.GONE
+                            }
+
                         }
                     }
                 }

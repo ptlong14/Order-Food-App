@@ -42,7 +42,7 @@
 
             android:focusable="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_food" />
+            android:src="@drawable/im_food_default" />
         <ImageView
             android:id="@+id/ivCamera"
             android:layout_width="32dp"

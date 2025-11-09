@@ -11,6 +11,7 @@ object OrderMapper {
         val orderListMapped = dto.orderList.takeIf { it.isNotEmpty() }?.map {
             OrderItem(
                 orderItemId = it.orderItemId,
+                foodId = it.foodId,
                 orderFoodName = it.orderFoodName,
                 orderFoodImgUrl = it.orderFoodImgUrl,
                 orderUnitPrice = it.orderUnitPrice,
@@ -37,6 +38,7 @@ object OrderMapper {
         val orderListMapped = domain.orderList.takeIf { it.isNotEmpty() }?.map {
                 OrderItemDto(
                     orderItemId = it.orderItemId,
+                    foodId = it.foodId,
                     orderFoodName = it.orderFoodName,
                     orderFoodImgUrl = it.orderFoodImgUrl,
                     orderUnitPrice = it.orderUnitPrice,
@@ -52,7 +54,6 @@ object OrderMapper {
             totalPrice = domain.totalPrice,
             paymentMethod = domain.paymentMethod,
             shippingFee = domain.shippingFee,
-
             orderNote = domain.orderNote,
             orderStatus = domain.orderStatus,
             createdAt = domain.createdAt,
@@ -64,6 +65,7 @@ object OrderMapper {
         val mapped= listOrderItem.map {
             CartItemDto(
                 cartItemId = it.orderItemId,
+                foodId = it.foodId,
                 foodName = it.orderFoodName,
                 foodImgUrl = it.orderFoodImgUrl,
                 unitPrice = it.orderUnitPrice,

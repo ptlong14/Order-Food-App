@@ -174,6 +174,7 @@ class CheckOutActivity : AppCompatActivity() {
                 val orderItems = cartItems.map {
                     OrderItem(
                         orderItemId = UUID.randomUUID().toString(),
+                        foodId = it.foodId,
                         orderFoodName = it.foodName,
                         orderFoodImgUrl = it.foodImgUrl,
                         orderUnitPrice = it.unitPrice,

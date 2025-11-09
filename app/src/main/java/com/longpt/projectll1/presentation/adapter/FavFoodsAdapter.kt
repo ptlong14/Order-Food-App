@@ -2,7 +2,6 @@ package com.longpt.projectll1.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.longpt.projectll1.R
@@ -32,19 +31,19 @@ class FavFoodsAdapter(var favFoods: List<Food>,
         val category = favFood.category
         when (category) {
             "snack" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.snack)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_snack)
             }
             "meal" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.meal)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_meal)
             }
             "vegan" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.vegan)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_vegan)
             }
             "dessert" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.dessert)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_dessert)
             }
             "drink" -> {
-                holder.binding.iconCategory.setImageResource(R.drawable.drink)
+                holder.binding.iconCategory.setImageResource(R.drawable.im_drink)
             }
         }
 

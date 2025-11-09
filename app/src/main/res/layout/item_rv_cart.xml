@@ -12,7 +12,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/img_food"
+        app:srcCompat="@drawable/im_food_default"
         app:shapeAppearanceOverlay="@style/RoundedImageStyle" />
 
     <TextView
@@ -70,7 +70,7 @@
             android:id="@+id/iBtnDecrease"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/subtract"
+            android:background="@drawable/im_subtract"
             android:backgroundTint="#FF5722"
             android:contentDescription="Giảm số lượng"
             android:foreground="?attr/selectableItemBackground"
@@ -91,7 +91,7 @@
             android:id="@+id/iBtnIncrease"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/add"
+            android:background="@drawable/im_add"
             android:backgroundTint="#FF5722"
             android:contentDescription="Tăng số lượng"
             android:foreground="?attr/selectableItemBackground"

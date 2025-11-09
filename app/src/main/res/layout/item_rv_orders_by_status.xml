@@ -38,7 +38,7 @@
                 android:layout_height="70dp"
 
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_food"
+                android:src="@drawable/im_food_default"
               />
 
             <!-- Ảnh món phụ (nếu có) -->
@@ -49,7 +49,7 @@
                 android:layout_marginStart="8dp"
 
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_food"
+                android:src="@drawable/im_food_default"
                  />
 
             <FrameLayout
@@ -64,7 +64,7 @@
                     android:layout_width="90dp"
                     android:layout_height="70dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/img_food"
+                    android:src="@drawable/im_food_default"
                      />
 
                 <TextView
@@ -125,7 +125,7 @@
                 android:layout_marginHorizontal="15dp"
                 android:text="Đánh giá"/>
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnOrderDetail"
+                android:id="@+id/btn2"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:textColor="#FFF"

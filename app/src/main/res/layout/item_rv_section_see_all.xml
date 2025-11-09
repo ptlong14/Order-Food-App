@@ -22,7 +22,7 @@
                 android:background="@drawable/border_search_view"
                 android:contentDescription="Ảnh sản phẩm"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_food" />
+                android:src="@drawable/im_food_default" />
             <ImageView
                 android:id="@+id/iconCategory"
                 android:layout_width="30dp"
@@ -32,7 +32,7 @@
                 android:background="@drawable/bg_search_view"
                 android:contentDescription="Icon danh mục"
                 android:padding="4dp"
-                android:src="@drawable/vegan"
+                android:src="@drawable/im_vegan"
                 app:tint="#FF5722" />
         </androidx.cardview.widget.CardView>
 

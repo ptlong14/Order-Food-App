@@ -7,7 +7,6 @@ import android.text.Spanned
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -116,7 +115,7 @@ class DetailFoodActivity : AppCompatActivity() {
                         if (favResult is TaskResult.Success) {
                             val isFav = favViewModel.isFoodFav(food.id)
                             binding.iBtnFavorite.setImageResource(
-                                if (isFav) R.drawable.fav else R.drawable.not_fav
+                                if (isFav) R.drawable.im_fav else R.drawable.im_not_fav
                             )
                         }
                     }

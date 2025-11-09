@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CartItem(
     val cartItemId: String = "",
+    val foodId: String = "",
     val foodName: String = "",
     val foodImgUrl: String = "",
     val unitPrice: Double = 0.0,

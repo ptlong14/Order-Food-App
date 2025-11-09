@@ -37,7 +37,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@drawable/arrow_back"
+            android:src="@drawable/im_arrow_back"
             app:tint="#FF5722" />
     </FrameLayout>
 

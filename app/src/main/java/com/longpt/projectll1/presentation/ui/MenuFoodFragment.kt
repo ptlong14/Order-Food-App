@@ -20,11 +20,11 @@ class MenuFoodFragment : Fragment() {
 
     private val tabTitles = listOf("Snacks", "Meal", "Vegan", "Dessert", "Drinks")
     private val tabIcons = listOf(
-        R.drawable.snack,
-        R.drawable.meal,
-        R.drawable.vegan,
-        R.drawable.dessert,
-        R.drawable.drink
+        R.drawable.im_snack,
+        R.drawable.im_meal,
+        R.drawable.im_vegan,
+        R.drawable.im_dessert,
+        R.drawable.im_drink
     )
 
 

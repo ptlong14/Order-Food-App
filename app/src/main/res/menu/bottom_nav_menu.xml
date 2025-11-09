@@ -3,22 +3,22 @@
 <item
     android:id="@+id/botHome"
     android:title="Home"
-    android:icon="@drawable/home"
+    android:icon="@drawable/im_home"
     />
     <item
         android:id="@+id/botFoodMenu"
         android:title="Thực đơn"
-        android:icon="@drawable/menu"
+        android:icon="@drawable/im_menu"
         />
     <item
         android:id="@+id/botFavorite"
         android:title="Thích"
-        android:icon="@drawable/heart"
+        android:icon="@drawable/im_heart"
         />
     <item
         android:id="@+id/botMyOrder"
         android:title="Đơn hàng"
-        android:icon="@drawable/order"
+        android:icon="@drawable/im_order"
         />
     <item
         android:id="@+id/userSetting"
