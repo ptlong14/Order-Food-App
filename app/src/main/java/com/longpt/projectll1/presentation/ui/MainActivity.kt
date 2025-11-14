@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.longpt.projectll1.R
 import com.longpt.projectll1.databinding.ActivityMainBinding
-import com.longpt.projectll1.notImplYet.UserFragment
+import com.longpt.projectll1.presentation.ui.UserFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding

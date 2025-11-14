@@ -16,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjectLL1">
         <activity
+            android:name=".presentation.ui.ShippingInforActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.ui.PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.CancelOrderActivity"
             android:exported="false" />
         <activity

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/frame_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FDCF53"
+            android:gravity="center"
+            android:paddingVertical="30dp"
+            android:text="Tài khoản của tôi"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:background="@drawable/button_v1"
+        android:drawableStart="@drawable/ic_chat"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="4dp"
+        android:text="Hỗ trợ"
+        android:textColor="#FF5722"
+        android:textSize="13sp"
+        app:drawableTint="#FF5722"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frame_header" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAccountProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/button_v1"
+        android:drawableStart="@drawable/ic_account"
+        android:drawableEnd="@drawable/ic_next"
+        android:foreground="?attr/selectableItemBackground"
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="4dp"
+        android:text="Thông tin tài khoản"
+        android:textColor="#FF5722"
+        android:textSize="13sp"
+        app:drawableTint="#FF5722"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnChat" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnPrivacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/button_v1"
+        android:drawableStart="@drawable/ic_privacy"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawablePadding="8dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="4dp"
+        android:text="Chính sách bảo mật"
+        android:textColor="#FF5722"
+        android:textSize="13sp"
+        app:drawableTint="#FF5722"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAccountProfile" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnShippingInfor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/button_v1"
+        android:drawableStart="@drawable/ic_shipping"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="15dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingVertical="4dp"
+        android:text="Thông tin về vận chuyển giao nhận"
+        android:textColor="#FF5722"
+        android:textSize="13sp"
+        app:drawableTint="#FF5722"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnPrivacyPolicy" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/button_v1"
+        android:drawableStart="@drawable/ic_logout"
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="4dp"
+        android:text="Đăng xuất"
+        android:foreground="?attr/selectableItemBackground"
+        android:textColor="#FF5722"
+        android:textSize="13sp"
+        app:drawableTint="#FF5722"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnShippingInfor" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Phiên bản: 1.4.11.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:textColor="#737373"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnLogout"
+        app:layout_constraintVertical_bias="0.082" />
+</androidx.constraintlayout.widget.ConstraintLayout>
