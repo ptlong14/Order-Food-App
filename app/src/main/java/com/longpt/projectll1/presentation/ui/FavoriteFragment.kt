@@ -30,7 +30,6 @@ class FavoriteFragment : Fragment() {
     lateinit var binding: FragmentFavoriteFoodsBinding
     lateinit var favViewModel: FavoriteFoodViewModel
     private val currentUser get() = FirebaseAuth.getInstance().currentUser
-
     private val userId = currentUser!!.uid
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

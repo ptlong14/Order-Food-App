@@ -6,12 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.R
 import com.longpt.projectll1.databinding.ActivityMainBinding
 import com.longpt.projectll1.presentation.ui.UserFragment
+import com.longpt.projectll1.utils.showToast
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    private val currentUser get() = FirebaseAuth.getInstance().currentUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,10 +40,18 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.botFavorite->{
+                    if (currentUser == null) {
+                        "Vui lòng đăng nhập để sử dụng chức năng này".showToast(this)
+                        return@setOnItemSelectedListener false
+                    }
                     loadFragment(FavoriteFragment())
                     true
                 }
                 R.id.botMyOrder->{
+                    if (currentUser == null) {
+                        "Vui lòng đăng nhập để sử dụng chức năng này".showToast(this)
+                        return@setOnItemSelectedListener false
+                    }
                     loadFragment(OrderHistoryContainerFragment())
                     true
                 }

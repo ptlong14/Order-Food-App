@@ -41,7 +41,7 @@ class BottomSheetFood : BottomSheetDialogFragment() {
     lateinit var optionGroupAdapter: OptionGroupAdapter
     lateinit var food: Food
     private val currentUser get() = FirebaseAuth.getInstance().currentUser
-    private val userId = currentUser!!.uid
+
     companion object {
         private const val ARG_FOOD_ID = "foodId"
         fun newInstance(foodId: String): BottomSheetFood {
@@ -68,11 +68,12 @@ class BottomSheetFood : BottomSheetDialogFragment() {
 
         val repoCart = CartRepositoryImpl(FirestoreDataSource())
         val addToCartUC = AddToCartUC(repoCart)
-        val removeFromCartUC= RemoveFromCartUC(repoCart)
+        val removeFromCartUC = RemoveFromCartUC(repoCart)
         val getCartUC = GetCartUC(repoCart)
         val updateCartItemQuantityUC = UpdateCartItemQuantityUC(repoCart)
 
-        val cartFactory = CartViewModelFactory(getCartUC,addToCartUC,removeFromCartUC,updateCartItemQuantityUC)
+        val cartFactory =
+            CartViewModelFactory(getCartUC, addToCartUC, removeFromCartUC, updateCartItemQuantityUC)
         cartViewModel = ViewModelProvider(this, cartFactory)[CartViewModel::class.java]
 
         detailViewModel.getFoodById(foodId)
@@ -132,12 +133,16 @@ class BottomSheetFood : BottomSheetDialogFragment() {
                 when (result) {
                     is TaskResult.Loading -> {
                     }
+
                     is TaskResult.Success -> {
                         "Đã thêm vào giỏ hàng".showToast(requireContext())
                         dismiss()
                     }
+
                     is TaskResult.Error -> {
-                        "Thêm vào giỏ hàng thất bại: ${result.exception.message}".showToast(requireContext())
+                        "Thêm vào giỏ hàng thất bại: ${result.exception.message}".showToast(
+                            requireContext()
+                        )
                     }
                 }
             }
@@ -161,30 +166,57 @@ class BottomSheetFood : BottomSheetDialogFragment() {
             dismiss()
         }
         binding.btnAddToCart.setOnClickListener {
-            if (detailViewModel.canAddToCart.value == true) {
-                val optionList= detailViewModel.getSelectedOptionDescriptions()
-                val optionString = optionList
-                    .joinToString(", ") { it.substringAfter(": ").trim() }
-                val cartItemId= GenerateUtil.generateCartItemId(food.id, optionString)
-                val cartItem= CartItem(cartItemId,food.id, food.name, food.imgUrl, detailViewModel.totalPrice.value/detailViewModel.quantity.value, detailViewModel.quantity.value, optionList)
-                cartViewModel.addCart(cartItem, userId)
+            if (currentUser == null) {
+                val bts = BottomSheetLogin()
+                bts.show(childFragmentManager, "LoginBTS")
             } else {
-                "Thêm vào giỏ hàng thất bại".showToast(requireContext())
+                val userId = currentUser!!.uid
+                if (detailViewModel.canAddToCart.value == true) {
+                    val optionList = detailViewModel.getSelectedOptionDescriptions()
+                    val optionString =
+                        optionList.joinToString(", ") { it.substringAfter(": ").trim() }
+                    val cartItemId = GenerateUtil.generateCartItemId(food.id, optionString)
+                    val cartItem = CartItem(
+                        cartItemId,
+                        food.id,
+                        food.name,
+                        food.imgUrl,
+                        detailViewModel.totalPrice.value / detailViewModel.quantity.value,
+                        detailViewModel.quantity.value,
+                        optionList
+                    )
+                    cartViewModel.addCart(cartItem, userId)
+                } else {
+                    "Thêm vào giỏ hàng thất bại".showToast(requireContext())
+                }
             }
         }
 
         binding.btnBuyNow.setOnClickListener {
-            if(detailViewModel.canAddToCart.value==true){
-                val optionList= detailViewModel.getSelectedOptionDescriptions()
-                val optionString = optionList
-                    .joinToString(", ") { it.substringAfter(": ").trim() }
-                val cartItemId= GenerateUtil.generateCartItemId(food.id, optionString)
-                val cartItem= CartItem(cartItemId, food.id,food.name, food.imgUrl, detailViewModel.totalPrice.value/detailViewModel.quantity.value, detailViewModel.quantity.value, optionList)
-                val intent = Intent(requireContext(), CheckOutActivity::class.java)
-                intent.putParcelableArrayListExtra("orderFoodData", arrayListOf(cartItem))
-                startActivity(intent)
-            }else{
-                "Không thể mua hàng".showToast(requireContext())
+            if (currentUser == null) {
+                val bts = BottomSheetLogin()
+                bts.show(childFragmentManager, "LoginBTS")
+            } else {
+                if (detailViewModel.canAddToCart.value == true) {
+                    val optionList = detailViewModel.getSelectedOptionDescriptions()
+                    val optionString =
+                        optionList.joinToString(", ") { it.substringAfter(": ").trim() }
+                    val cartItemId = GenerateUtil.generateCartItemId(food.id, optionString)
+                    val cartItem = CartItem(
+                        cartItemId,
+                        food.id,
+                        food.name,
+                        food.imgUrl,
+                        detailViewModel.totalPrice.value / detailViewModel.quantity.value,
+                        detailViewModel.quantity.value,
+                        optionList
+                    )
+                    val intent = Intent(requireContext(), CheckOutActivity::class.java)
+                    intent.putParcelableArrayListExtra("orderFoodData", arrayListOf(cartItem))
+                    startActivity(intent)
+                } else {
+                    "Không thể mua hàng".showToast(requireContext())
+                }
             }
         }
     }

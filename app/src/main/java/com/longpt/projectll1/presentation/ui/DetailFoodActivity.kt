@@ -150,7 +150,11 @@ class DetailFoodActivity : AppCompatActivity() {
 
     private fun setupActions() {
         binding.iBtnFavorite.setOnClickListener {
-            val userId = currentUser?.uid ?: return@setOnClickListener
+            if(currentUser==null){
+                "Vui lòng đăng nhập để sử dụng chức năng này".showToast(this)
+                return@setOnClickListener
+            }
+            val userId = currentUser!!.uid
             val isFav = favViewModel.isFoodFav(food.id)
             if (isFav) {
                 favViewModel.removeFavorite(foodId, userId)

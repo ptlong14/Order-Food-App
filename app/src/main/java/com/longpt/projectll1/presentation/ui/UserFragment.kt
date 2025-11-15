@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.longpt.projectll1.auth.LoginActivity
 import com.longpt.projectll1.databinding.FragmentAccountBinding
 import com.longpt.projectll1.utils.showToast
 
@@ -33,15 +34,28 @@ class UserFragment : Fragment() {
                     .setMessage("Bạn có chắc chắn muốn đăng xuất?")
                     .setPositiveButton("Đăng xuất") { _, _ ->
                         FirebaseAuth.getInstance().signOut()
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        startActivity(intent)
+                        requireActivity().finish()
                     }.setNegativeButton("Hủy", null).setCancelable(false).show()
             }
         } else {
-            //show bottomSheet signIn
+            binding.btnLogout.text = "Đăng nhập"
+            binding.btnLogout.setOnClickListener {
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
+            }
         }
         binding.btnChat.setOnClickListener {
-            "Not yet implemented".showToast(requireContext())
+            "Tính năng này đang được phát triển".showToast(requireContext())
         }
         binding.btnAccountProfile.setOnClickListener {
+            if (currentUser == null) {
+                val bts= BottomSheetLogin()
+                bts.show(childFragmentManager, "LoginBTS")
+                return@setOnClickListener
+            }
             val intent = Intent(requireContext(), UserInformationActivity::class.java)
             startActivity(intent)
         }

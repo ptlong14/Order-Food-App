@@ -125,6 +125,7 @@ class HomeFragment : Fragment() {
             }
         }
 
+
         binding.swipeRefreshHome.setOnRefreshListener {
             viewModel.observeHomeSections()
         }
