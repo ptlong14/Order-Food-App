@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.longpt.projectll1.auth.RegisterActivity
 import com.longpt.projectll1.databinding.ActivityLoginBinding
 
 class BottomSheetLogin : BottomSheetDialogFragment() {
@@ -21,7 +20,9 @@ class BottomSheetLogin : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvRegister.setOnClickListener {
-            startActivity(Intent(requireContext(), RegisterActivity::class.java))
+            val intent = Intent(requireContext(), RegisterActivity::class.java)
+            intent.putExtra("from", "bottomsheet")
+            startActivity(intent)
         }
     }
 }

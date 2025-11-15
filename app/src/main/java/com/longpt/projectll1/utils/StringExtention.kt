@@ -11,7 +11,6 @@ import com.longpt.projectll1.databinding.DialogAlertV1Binding
 
 fun String.showToast(context: Context, durationMillis: Long = 2700L) {
     val toast = Toast(context).apply {
-        // Inflate layout custom
         val binding = DialogAlertV1Binding.inflate(LayoutInflater.from(context))
         binding.tvMessage.text = this@showToast
         view = binding.root
@@ -20,8 +19,6 @@ fun String.showToast(context: Context, durationMillis: Long = 2700L) {
     }
 
     toast.show()
-
-    // Tự dismiss chính xác theo durationMillis
     Handler(Looper.getMainLooper()).postDelayed({
         toast.cancel()
     }, durationMillis)

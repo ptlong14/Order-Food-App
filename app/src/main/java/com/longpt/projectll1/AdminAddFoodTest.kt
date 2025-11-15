@@ -18,7 +18,7 @@ import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.model.OptionGroup
 import com.longpt.projectll1.domain.model.OptionItem
 
-class AdminAddFood : AppCompatActivity() {
+class AdminAddFoodTest : AppCompatActivity() {
     private lateinit var binding: XxxActivityAdminAddFoodBinding
     private val db = Firebase.firestore
     private val categories = listOf("snacks", "meal", "vegan", "dessert", "drinks")

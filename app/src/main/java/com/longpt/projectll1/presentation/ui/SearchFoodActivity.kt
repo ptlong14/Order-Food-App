@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
-import com.longpt.projectll1.data.remote.TypesenseDataSource
+import com.longpt.projectll1.data.remote.TypesenseService
 import com.longpt.projectll1.data.repositoryImpl.TypesenseSearchRepositoryImpl
 import com.longpt.projectll1.databinding.ActivitySearchFoodBinding
 import com.longpt.projectll1.domain.usecase.SearchFoodsUC
@@ -58,7 +58,7 @@ class SearchFoodActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
         val repoSearch = TypesenseSearchRepositoryImpl(
-            TypesenseDataSource(), FirestoreDataSource()
+            TypesenseService(), FirestoreDataSource()
         )
         val syncFoodsDataUC = SyncFoodsDataUC(repoSearch)
         val searchFoodsUC = SearchFoodsUC(repoSearch)

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
-import com.longpt.projectll1.auth.LoginActivity
 import com.longpt.projectll1.databinding.FragmentAccountBinding
 import com.longpt.projectll1.utils.showToast
 

@@ -7,7 +7,6 @@ import com.longpt.projectll1.domain.usecase.GetCartUC
 import com.longpt.projectll1.domain.usecase.RemoveFromCartUC
 import com.longpt.projectll1.domain.usecase.UpdateCartItemQuantityUC
 import com.longpt.projectll1.presentation.viewModel.CartViewModel
-import com.longpt.projectll1.presentation.viewModel.FoodDetailViewModel
 
 class CartViewModelFactory(
     private val getCartUC: GetCartUC,

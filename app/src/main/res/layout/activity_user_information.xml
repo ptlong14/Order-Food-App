@@ -162,7 +162,6 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="10dp"
                     android:text="Email"
-                    app:drawableEndCompat="@drawable/ic_next"
                     app:drawableTint="#A09F9F" />
 
             </LinearLayout>

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    tools:context=".AdminAddFood"
+    tools:context=".AdminAddFoodTest"
     android:padding="16dp">
 
     <LinearLayout

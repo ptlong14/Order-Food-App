@@ -68,13 +68,13 @@
             android:name=".presentation.ui.DetailFoodActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminAddFood"
+            android:name=".AdminAddFoodTest"
             android:exported="false" />
         <activity
-            android:name=".auth.RegisterActivity"
+            android:name=".presentation.ui.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.LoginActivity"
+            android:name=".presentation.ui.LoginActivity"
             android:exported="false">
         </activity>
         <activity

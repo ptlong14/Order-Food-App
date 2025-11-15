@@ -1,6 +1,5 @@
 package com.longpt.projectll1.data.remote
 
-import android.util.Log
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.Food
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +14,7 @@ import org.typesense.resources.Node
 import java.time.Duration
 
 
-class TypesenseDataSource() {
+class TypesenseService() {
     private var client: Client
     init {
         val node = Node("http", "192.168.1.62", "8108" )

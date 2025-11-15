@@ -3,13 +3,12 @@ package com.longpt.projectll1.data.repositoryImpl
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.mapper.FoodMapper
 import com.longpt.projectll1.data.remote.FirestoreDataSource
-import com.longpt.projectll1.data.remote.TypesenseDataSource
-import com.longpt.projectll1.domain.model.Food
+import com.longpt.projectll1.data.remote.TypesenseService
 import com.longpt.projectll1.domain.repository.TypesenseSearchRepository
 import com.longpt.projectll1.presentation.modelUI.FoodsSearchResult
-import org.typesense.model.SearchResult
 
-class TypesenseSearchRepositoryImpl(private val typesenseDataSource: TypesenseDataSource,
+class TypesenseSearchRepositoryImpl(
+    private val typesenseService: TypesenseService,
     private val firestoreDataSource: FirestoreDataSource
     ): TypesenseSearchRepository {
     override suspend fun syncFoodsDataToTypesense(): TaskResult<Unit> {
@@ -21,7 +20,7 @@ class TypesenseSearchRepositoryImpl(private val typesenseDataSource: TypesenseDa
             val foodList = foodsResult.data
 
             val mapped = foodList.map { dto -> FoodMapper.fromDtoToDomain(dto) }
-            val result = typesenseDataSource.syncFoods(mapped)
+            val result = typesenseService.syncFoods(mapped)
             if(result is TaskResult.Error) return TaskResult.Error(result.exception)
             TaskResult.Success(Unit)
         }catch (e: Exception){
@@ -30,7 +29,7 @@ class TypesenseSearchRepositoryImpl(private val typesenseDataSource: TypesenseDa
     }
 
     override suspend fun searchFood(q: String): TaskResult<List<FoodsSearchResult>> {
-        val result = typesenseDataSource.searchFood(q)
+        val result = typesenseService.searchFood(q)
         return when(result) {
             is TaskResult.Success -> {
                 try {
