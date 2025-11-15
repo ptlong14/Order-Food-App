@@ -10,6 +10,7 @@ import com.longpt.projectll1.data.modelDTO.BannerDto
 import com.longpt.projectll1.data.modelDTO.CartItemDto
 import com.longpt.projectll1.data.modelDTO.FoodDto
 import com.longpt.projectll1.data.modelDTO.OrderDto
+import com.longpt.projectll1.data.modelDTO.UserDto
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -514,9 +515,7 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
 //    }
     //hủy đơn hàng
     suspend fun canceledOrder(
-        orderId: String,
-        userId: String,
-        cancelReason: String
+        orderId: String, userId: String, cancelReason: String
     ): TaskResult<Unit> {
         return try {
             val orderRef = firestore.collection("orders").document(orderId)
@@ -544,7 +543,6 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
     //mua lại đơn hàng
     suspend fun reOrder(orderId: String, userId: String): TaskResult<List<CartItemDto>> {
         return try {
-
             val snapshot = firestore.collection("orders").document(orderId).get().await()
             val order = snapshot.toObject(OrderDto::class.java)
             if (order == null) {
@@ -554,9 +552,60 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
                 return TaskResult.Error(Exception("Đơn hàng này không thuộc về bạn"))
             }
             val orderItems = order.orderList
-            val cartItemMapped= OrderMapper.toCartItemDto(orderItems)
+            val cartItemMapped = OrderMapper.toCartItemDto(orderItems)
             TaskResult.Success(cartItemMapped)
         } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    //lấy thông tin user
+    fun getUserInfo(userId: String): Flow<TaskResult<UserDto>> = callbackFlow {
+        if (userId.isEmpty()) {
+            trySend(TaskResult.Error(Exception("UserId không hợp lệ")))
+            close()
+            return@callbackFlow
+        }
+        trySend(TaskResult.Loading)
+        val listener =
+            firestore.collection("users").document(userId).addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(TaskResult.Error(error))
+                    return@addSnapshotListener
+                }
+                if (snapshot != null) {
+                    val data = snapshot.toObject(UserDto::class.java)
+
+                    if (data != null) trySend(TaskResult.Success(data))
+                    else trySend(TaskResult.Error(Exception("Thông tin người dùng null")))
+                }
+            }
+        awaitClose {
+            listener.remove()
+        }
+    }
+
+    //cập nhật thông tin người dùng
+    suspend fun updateUserInfor(userId: String, field: String, value: String): TaskResult<Unit> {
+        if (userId.isEmpty()) {
+            return TaskResult.Error(Exception("UserId không hợp lệ"))
+        }
+        return try {
+            firestore.collection("users").document(userId).update(field, value).await()
+            TaskResult.Success(Unit)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+    //cập nhật avatar
+    suspend fun updateAvatar(userId: String, url: String): TaskResult<Unit>{
+        if (userId.isEmpty()) {
+            return TaskResult.Error(Exception("UserId không hợp lệ"))
+        }
+        return try{
+            firestore.collection("users").document(userId).update("avatarUrl", url).await()
+            TaskResult.Success(Unit)
+        }catch (e: Exception){
             TaskResult.Error(e)
         }
     }

@@ -40,12 +40,9 @@ class BottomSheetFood : BottomSheetDialogFragment() {
     lateinit var cartViewModel: CartViewModel
     lateinit var optionGroupAdapter: OptionGroupAdapter
     lateinit var food: Food
-
     private val currentUser get() = FirebaseAuth.getInstance().currentUser
-
     private val userId = currentUser!!.uid
     companion object {
-        const val TAG = "BottomSheetFood"
         private const val ARG_FOOD_ID = "foodId"
         fun newInstance(foodId: String): BottomSheetFood {
             val fragment = BottomSheetFood()

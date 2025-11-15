@@ -1,11 +1,12 @@
 package com.longpt.projectll1.domain.repository
 
+import android.net.Uri
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.User
-import java.io.File
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
-    suspend fun getUserById(userId: String): TaskResult<User>
-    suspend fun updateUserInfor(field: String, value: Any): TaskResult<Unit>
-    suspend fun updateAvatar(userId: String, fileImg: File): TaskResult<Unit>
+    fun getUserById(userId: String): Flow<TaskResult<User>>
+    suspend fun updateUserInfor(userId: String, field: String, value: String): TaskResult<Unit>
+    fun updateAvatar(userId: String, uri: Uri): Flow<TaskResult<Unit>>
 }

@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.UpdateAddressActivity">
-
-    <!-- Header -->
     <FrameLayout
         android:id="@+id/frame_header_add_addr"
         android:layout_width="match_parent"

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.databinding.FragmentAccountBinding
+import com.longpt.projectll1.utils.showToast
 
 
 class UserFragment : Fragment() {
@@ -37,7 +38,13 @@ class UserFragment : Fragment() {
         } else {
             //show bottomSheet signIn
         }
-
+        binding.btnChat.setOnClickListener {
+            "Not yet implemented".showToast(requireContext())
+        }
+        binding.btnAccountProfile.setOnClickListener {
+            val intent = Intent(requireContext(), UserInformationActivity::class.java)
+            startActivity(intent)
+        }
         binding.btnPrivacyPolicy.setOnClickListener {
             val intent= Intent(requireContext(), PrivacyPolicyActivity::class.java)
             startActivity(intent)
