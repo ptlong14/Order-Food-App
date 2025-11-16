@@ -15,6 +15,7 @@ import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirebaseAuthDataSource
 import com.longpt.projectll1.data.repositoryImpl.AuthRepositoryImpl
+import com.longpt.projectll1.data.sharedPref.UserStorage
 import com.longpt.projectll1.databinding.ActivityLoginBinding
 import com.longpt.projectll1.domain.usecase.ChangePasswordUC
 import com.longpt.projectll1.domain.usecase.LoginUC
@@ -88,6 +89,7 @@ class LoginActivity : AppCompatActivity() {
                             val user = res.data
                             "Đăng nhập thành công. Chào mừng ${user.name}".showToast(this@LoginActivity)
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            UserStorage.saveUser(this@LoginActivity, user.name, user.avatarUrl)
                             finish()
                         }
                     }

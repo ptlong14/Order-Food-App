@@ -1,9 +1,9 @@
-package com.longpt.projectll1.data.SharedPef
+package com.longpt.projectll1.data.sharedPref
 
 import android.content.Context
+import androidx.core.content.edit
 import com.google.gson.Gson
 import com.longpt.projectll1.domain.model.Order
-import androidx.core.content.edit
 
 object PendingOrderStorage {
     private const val PREFS_NAME = "pending_order_prefs"

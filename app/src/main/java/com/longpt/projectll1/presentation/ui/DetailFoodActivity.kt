@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.R
@@ -24,14 +25,19 @@ import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.FoodRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityDetailFoodBinding
 import com.longpt.projectll1.domain.model.Food
+import com.longpt.projectll1.domain.usecase.AddRatingUC
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
 import com.longpt.projectll1.domain.usecase.GetFoodByIdUC
+import com.longpt.projectll1.domain.usecase.GetRatingListByFoodIdUC
 import com.longpt.projectll1.domain.usecase.RemoveItemFromFavoriteUC
+import com.longpt.projectll1.presentation.adapter.RatingAdapter
 import com.longpt.projectll1.presentation.factory.FavFoodsViewModelFactory
 import com.longpt.projectll1.presentation.factory.FoodDetailViewModelFactory
+import com.longpt.projectll1.presentation.factory.RatingViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.FavoriteFoodViewModel
 import com.longpt.projectll1.presentation.viewModel.FoodDetailViewModel
+import com.longpt.projectll1.presentation.viewModel.RatingOrderViewModel
 import com.longpt.projectll1.utils.AlertUtils
 import com.longpt.projectll1.utils.FormatUtil
 import com.longpt.projectll1.utils.ShareScreenshot
@@ -43,10 +49,12 @@ class DetailFoodActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailFoodBinding
     private lateinit var tvDescription: TextView
     private lateinit var fullText: String
-
     private lateinit var detailViewModel: FoodDetailViewModel
     private lateinit var favViewModel: FavoriteFoodViewModel
+    private lateinit var ratingViewModel: RatingOrderViewModel
     private val currentUser get() = FirebaseAuth.getInstance().currentUser
+
+    private lateinit var adapterRating: RatingAdapter
 
     private lateinit var foodId: String
     private lateinit var food: Food
@@ -66,20 +74,34 @@ class DetailFoodActivity : AppCompatActivity() {
             insets
         }
         foodId = intent.getStringExtra(EXTRA_FOOD_ID) ?: ""
+        adapterRating = RatingAdapter(emptyList())
+        binding.rvComments.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvComments.adapter = adapterRating
 
         val repo = FoodRepositoryImpl(FirestoreDataSource())
         val getFoodByIdUC = GetFoodByIdUC(repo)
         val getFavFoodsUC = GetFavFoodsUC(repo)
         val removeFavoriteUC = RemoveItemFromFavoriteUC(repo)
         val addToFavoriteUC = AddToFavoriteUC(repo)
+
+        val repoRating = FoodRepositoryImpl(FirestoreDataSource())
+        val addRatingUC = AddRatingUC(repoRating)
+        val getRatingListByFoodIdUC = GetRatingListByFoodIdUC(repoRating)
+
         val detailFactory = FoodDetailViewModelFactory(getFoodByIdUC)
         val favFactory = FavFoodsViewModelFactory(getFavFoodsUC, addToFavoriteUC, removeFavoriteUC)
+        val ratingFactory = RatingViewModelFactory(
+            addRatingUC, getRatingListByFoodIdUC
+        )
 
+        ratingViewModel = ViewModelProvider(this, ratingFactory)[RatingOrderViewModel::class.java]
         detailViewModel = ViewModelProvider(this, detailFactory)[FoodDetailViewModel::class.java]
         favViewModel = ViewModelProvider(this, favFactory)[FavoriteFoodViewModel::class.java]
 
         detailViewModel.getFoodById(foodId)
         currentUser?.uid?.let { favViewModel.observeFavFoods(it) }
+        ratingViewModel.getRatingList(foodId)
 
         setupObservers()
         setupActions()
@@ -134,7 +156,9 @@ class DetailFoodActivity : AppCompatActivity() {
                 when (result) {
                     is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã thêm vào yêu thích").showToast(this@DetailFoodActivity)
-                    is TaskResult.Error -> ("Thêm thất bại: ${result.exception.message}").showToast(this@DetailFoodActivity)
+                    is TaskResult.Error -> ("Thêm thất bại: ${result.exception.message}").showToast(
+                        this@DetailFoodActivity
+                    )
                 }
             }
         }
@@ -144,7 +168,21 @@ class DetailFoodActivity : AppCompatActivity() {
                 when (result) {
                     is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã xóa khỏi yêu thích").showToast(this@DetailFoodActivity)
-                    is TaskResult.Error -> ("Xóa thất bại: ${result.exception.message}").showToast(this@DetailFoodActivity)
+                    is TaskResult.Error -> ("Xóa thất bại: ${result.exception.message}").showToast(
+                        this@DetailFoodActivity
+                    )
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            ratingViewModel.ratingList.collect { res ->
+                when (res) {
+                    is TaskResult.Loading -> {}
+                    is TaskResult.Error -> res.exception.message?.showToast(this@DetailFoodActivity)
+                    is TaskResult.Success -> {
+                        adapterRating.updateData(res.data)
+                    }
                 }
             }
         }
@@ -152,7 +190,7 @@ class DetailFoodActivity : AppCompatActivity() {
 
     private fun setupActions() {
         binding.iBtnFavorite.setOnClickListener {
-            if(currentUser==null){
+            if (currentUser == null) {
                 AlertUtils.showLoginAlert(this) {
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.putExtra("from", "client")

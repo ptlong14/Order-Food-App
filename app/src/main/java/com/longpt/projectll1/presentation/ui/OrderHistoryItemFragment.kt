@@ -78,7 +78,8 @@ class OrderHistoryItemFragment : Fragment() {
             OrdersByStatusAdapter(type!!, emptyList(), onClickBtn = { orderId, typeBtn ->
                 when (typeBtn) {
                     "Rating" -> {
-                        "Rating for order: $orderId".showToast(requireContext())
+                        val fragment = BottomSheetRatingOrder.newInstance(orderId)
+                        fragment.show(parentFragmentManager, "BottomSheetRatingOrder")
                     }
 
                     "Cancelled" -> {
@@ -141,7 +142,6 @@ class OrderHistoryItemFragment : Fragment() {
                                 binding.rvOrderItem.visibility = View.VISIBLE
                                 binding.layoutEmptyOrder.visibility = View.GONE
                             }
-
                         }
                     }
                 }

@@ -25,6 +25,7 @@ class OrderHistoryContainerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val orderVPAdapter= OrdersViewPagerAdapter(this)
         binding.viewPager.adapter= orderVPAdapter
+        binding.viewPager.offscreenPageLimit = 4
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager){tab,pos->
             when (pos) {

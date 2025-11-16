@@ -10,6 +10,7 @@ import com.longpt.projectll1.data.modelDTO.BannerDto
 import com.longpt.projectll1.data.modelDTO.CartItemDto
 import com.longpt.projectll1.data.modelDTO.FoodDto
 import com.longpt.projectll1.data.modelDTO.OrderDto
+import com.longpt.projectll1.data.modelDTO.RatingDto
 import com.longpt.projectll1.data.modelDTO.UserDto
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -91,28 +92,6 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             TaskResult.Success(Unit)
         } catch (e: Exception) {
             TaskResult.Error(Exception("Có lỗi khi xóa khỏi yêu thích: " + e.message))
-        }
-    }
-
-    //kiểm tra đồ ăn có trong yêu thích hay không
-    fun checkFavorite(foodId: String, userId: String): Flow<TaskResult<Boolean>> = callbackFlow {
-        trySend(TaskResult.Loading)
-        val listener =
-            firestore.collection("users").document(userId).collection("favorites").document(foodId)
-                .addSnapshotListener { snapshot, error ->
-                    if (error != null) {
-                        trySend(TaskResult.Error(error))
-                        return@addSnapshotListener
-                    }
-                    if (snapshot != null) {
-                        val data = snapshot.exists()
-                        trySend(TaskResult.Success(data))
-                    } else {
-                        trySend(TaskResult.Success(false))
-                    }
-                }
-        awaitClose {
-            listener.remove()
         }
     }
 
@@ -554,6 +533,51 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             val orderItems = order.orderList
             val cartItemMapped = OrderMapper.toCartItemDto(orderItems)
             TaskResult.Success(cartItemMapped)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    //tạo đánh giá cho món ăn
+    suspend fun createRating(rating: RatingDto, foodId: String, userId: String): TaskResult<Unit> {
+        if (userId.isEmpty()) {
+            return TaskResult.Error(Exception("UserId không hợp lệ"))
+        }
+        if (foodId.isEmpty()) {
+            return TaskResult.Error(Exception("Món ăn không tồn tại"))
+        }
+        return try {
+            val ratingRef = firestore.collection("foods").document(foodId).collection("ratings")
+                .document(userId)
+            ratingRef.set(rating).await()
+
+            val ratingsSnapshot = firestore.collection("foods")
+                .document(foodId)
+                .collection("ratings")
+                .get()
+                .await()
+
+            val ratings = ratingsSnapshot.documents.map { it.getDouble("rating") ?: 0.0 }
+            val newAverage = if (ratings.isNotEmpty()) ratings.average() else 0.0
+            firestore.collection("foods")
+                .document(foodId)
+                .update("rating", newAverage)
+                .await()
+            TaskResult.Success(Unit)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    //lấy ds đánh giá
+    suspend fun getRatingList(foodId: String): TaskResult<List<RatingDto>> {
+        return try {
+            val snapshot = firestore.collection("foods").document(foodId).collection("ratings")
+                .get().await()
+            val data = snapshot.documents.mapNotNull {
+                it.toObject(RatingDto::class.java)
+            }
+            TaskResult.Success(data)
         } catch (e: Exception) {
             TaskResult.Error(e)
         }

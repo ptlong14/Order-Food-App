@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.longpt.projectll1.data.sharedPref.UserStorage
 import com.longpt.projectll1.databinding.FragmentAccountBinding
 import com.longpt.projectll1.utils.AlertUtils
 import com.longpt.projectll1.utils.showToast
@@ -34,6 +35,7 @@ class UserFragment : Fragment() {
                     .setMessage("Bạn có chắc chắn muốn đăng xuất?")
                     .setPositiveButton("Đăng xuất") { _, _ ->
                         FirebaseAuth.getInstance().signOut()
+                        UserStorage.clearUser(requireContext())
                         val intent = Intent(requireContext(), MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         startActivity(intent)

@@ -2,8 +2,10 @@ package com.longpt.projectll1.data.repositoryImpl
 
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.mapper.FoodMapper
+import com.longpt.projectll1.data.mapper.RatingMapper
 import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.domain.model.Food
+import com.longpt.projectll1.domain.model.Rating
 import com.longpt.projectll1.domain.repository.FoodRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -33,16 +35,42 @@ class FoodRepositoryImpl(private val dataSource: FirestoreDataSource) : FoodRepo
         }
     }
 
+    override suspend fun getRatingList(foodId: String): TaskResult<List<Rating>> {
+        return when (val res = dataSource.getRatingList(foodId)) {
+            is TaskResult.Success -> {
+                val mapped = res.data.map {
+                    RatingMapper.fromDtoToDomain(it)
+                }
+                TaskResult.Success(mapped)
+            }
+            is TaskResult.Error -> TaskResult.Error(res.exception)
+            is TaskResult.Loading -> TaskResult.Loading
+        }
+    }
+
+    override suspend fun addRating(
+        rating: Rating,
+        foodId: String,
+        userId: String
+    ): TaskResult<Unit> {
+        val dto = RatingMapper.fromDomainToDto(rating)
+        return dataSource.createRating(dto, foodId, userId)
+    }
+
+    override suspend fun updateRating(
+        rating: Rating,
+        foodId: String,
+        userId: String
+    ): TaskResult<Unit> {
+        TODO("Not yet implemented")
+    }
+
 
     override suspend fun addToFavorite(
         food: Food, userId: String
     ): TaskResult<Unit> {
         val dto = FoodMapper.fromDomainToDto(food)
         return dataSource.addToFavorite(dto, userId)
-    }
-
-    override fun isFavorite(foodId: String, userId: String): Flow<TaskResult<Boolean>> {
-        return dataSource.checkFavorite(foodId, userId)
     }
 
     override suspend fun removeFavorite(foodId: String, userId: String): TaskResult<Unit> {
@@ -84,10 +112,6 @@ class FoodRepositoryImpl(private val dataSource: FirestoreDataSource) : FoodRepo
             is TaskResult.Error -> TaskResult.Error(res.exception)
             is TaskResult.Loading -> TaskResult.Loading
         }
-    }
-
-    override fun getTrendingFoodList(): Flow<TaskResult<List<Food>>> {
-        TODO("Not yet implemented")
     }
 
     override suspend fun getTopRatedFoodList(): TaskResult<List<Food>> {

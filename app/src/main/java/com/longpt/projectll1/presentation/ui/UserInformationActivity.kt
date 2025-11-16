@@ -18,6 +18,7 @@ import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.CloudinaryService
 import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.UserRepositoryImpl
+import com.longpt.projectll1.data.sharedPref.UserStorage
 import com.longpt.projectll1.databinding.ActivityUserInformationBinding
 import com.longpt.projectll1.domain.usecase.GetUserInfoUC
 import com.longpt.projectll1.domain.usecase.UpdateAvatarUser
@@ -80,6 +81,11 @@ class UserInformationActivity : AppCompatActivity() {
                             .placeholder(R.drawable.im_loading)
                             .error(R.drawable.im_avatar_err)
                             .into(binding.imgAvatar)
+                        UserStorage.saveUser(
+                            this@UserInformationActivity,
+                            user.name,
+                            user.avatarUrl
+                        )
                     }
                 }
             }
