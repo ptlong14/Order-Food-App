@@ -5,6 +5,12 @@ import com.longpt.projectll1.domain.model.User
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): TaskResult<User>
-
     suspend fun register(email: String, password: String): TaskResult<Unit>
+    suspend fun changePassword(
+        email: String,
+        oldPassword: String,
+        newPassword: String
+    ): TaskResult<Unit>
+
+    suspend fun sendResetPassword(email: String): TaskResult<Unit>
 }

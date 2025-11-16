@@ -2,10 +2,7 @@ package com.longpt.projectll1.presentation.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
-import com.longpt.projectll1.domain.usecase.CheckFoodIsFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFoodByIdUC
-import com.longpt.projectll1.domain.usecase.RemoveFromFavoriteUC
 import com.longpt.projectll1.presentation.viewModel.FoodDetailViewModel
 
 class FoodDetailViewModelFactory(

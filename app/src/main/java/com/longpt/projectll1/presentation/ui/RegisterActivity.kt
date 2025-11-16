@@ -16,8 +16,10 @@ import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirebaseAuthDataSource
 import com.longpt.projectll1.data.repositoryImpl.AuthRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityRegisterBinding
+import com.longpt.projectll1.domain.usecase.ChangePasswordUC
 import com.longpt.projectll1.domain.usecase.LoginUC
 import com.longpt.projectll1.domain.usecase.RegisterUC
+import com.longpt.projectll1.domain.usecase.ResetPasswordUC
 import com.longpt.projectll1.presentation.factory.AuthViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.AuthViewModel
 import com.longpt.projectll1.utils.showToast
@@ -36,9 +38,13 @@ class RegisterActivity : AppCompatActivity() {
         val repoAuth = AuthRepositoryImpl(FirebaseAuthDataSource())
         val loginUC = LoginUC(repoAuth)
         val registerUC = RegisterUC(repoAuth)
+        val changePasswordUC = ChangePasswordUC(repoAuth)
+        val resetPasswordUC = ResetPasswordUC(repoAuth)
         val authFactory = AuthViewModelFactory(
             loginUC,
-            registerUC
+            registerUC,
+            changePasswordUC,
+            resetPasswordUC
         )
         authViewModel = ViewModelProvider(this, authFactory)[AuthViewModel::class.java]
 
@@ -68,34 +74,35 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             authViewModel.register(email, password)
-
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    authViewModel.registerResult.collect { res ->
-                        when (res) {
-                            TaskResult.Loading -> {}
-                            is TaskResult.Error -> {
-                                res.exception.message?.showToast(this@RegisterActivity)
-                            }
-
-                            is TaskResult.Success -> {
-                                "Đăng ký thành công. Vui lòng đăng nhập lại".showToast(this@RegisterActivity)
-                                if (from == "bottomsheet") finish()
-                                else startActivity(
-                                    Intent(
-                                        this@RegisterActivity,
-                                        LoginActivity::class.java
-                                    )
-                                )
-                            }
-                        }
-                    }
-                }
-            }
         }
         binding.tvLogin.setOnClickListener {
             if (from == "login") startActivity(Intent(this, LoginActivity::class.java))
             else finish()
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.registerResult.collect { res ->
+                    when (res) {
+                        TaskResult.Loading -> {}
+                        is TaskResult.Error -> {
+                            res.exception.message?.showToast(this@RegisterActivity)
+                            return@collect
+                        }
+
+                        is TaskResult.Success -> {
+                            "Đăng ký thành công. Vui lòng đăng nhập lại".showToast(this@RegisterActivity)
+                            if (from == "bottomsheet") finish()
+                            else startActivity(
+                                Intent(
+                                    this@RegisterActivity,
+                                    LoginActivity::class.java
+                                )
+                            )
+                        }
+                    }
+                }
+            }
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

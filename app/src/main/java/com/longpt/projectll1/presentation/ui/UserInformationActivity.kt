@@ -54,7 +54,6 @@ class UserInformationActivity : AppCompatActivity() {
             insets
         }
 
-        // Init ViewModel
         val repoUser = UserRepositoryImpl(FirestoreDataSource(), CloudinaryService())
         val userFactory = UserViewModelFactory(
             GetUserInfoUC(repoUser), UpdateUserInforUC(repoUser), UpdateAvatarUser(repoUser)
@@ -127,12 +126,13 @@ class UserInformationActivity : AppCompatActivity() {
             val oldValue = binding.edtBio.text.toString().substringAfter(": ").trim()
             showBTS(field, oldValue)
         }
+        binding.etPassword.setOnClickListener {
+            startActivity(Intent(this, ChangePasswordActivity::class.java))
+        }
 
         binding.iBtnBack.setOnClickListener {
             finish()
         }
-
-        // Start observing user info
         userViewModel.observerUserInfos(userId)
     }
 

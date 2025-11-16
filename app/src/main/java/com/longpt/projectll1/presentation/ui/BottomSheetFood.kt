@@ -21,7 +21,7 @@ import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.usecase.AddToCartUC
 import com.longpt.projectll1.domain.usecase.GetCartUC
 import com.longpt.projectll1.domain.usecase.GetFoodByIdUC
-import com.longpt.projectll1.domain.usecase.RemoveFromCartUC
+import com.longpt.projectll1.domain.usecase.RemoveItemFromCartUC
 import com.longpt.projectll1.domain.usecase.UpdateCartItemQuantityUC
 import com.longpt.projectll1.presentation.adapter.OptionGroupAdapter
 import com.longpt.projectll1.presentation.factory.CartViewModelFactory
@@ -68,12 +68,17 @@ class BottomSheetFood : BottomSheetDialogFragment() {
 
         val repoCart = CartRepositoryImpl(FirestoreDataSource())
         val addToCartUC = AddToCartUC(repoCart)
-        val removeFromCartUC = RemoveFromCartUC(repoCart)
+        val removeItemFromCartUC = RemoveItemFromCartUC(repoCart)
         val getCartUC = GetCartUC(repoCart)
         val updateCartItemQuantityUC = UpdateCartItemQuantityUC(repoCart)
 
         val cartFactory =
-            CartViewModelFactory(getCartUC, addToCartUC, removeFromCartUC, updateCartItemQuantityUC)
+            CartViewModelFactory(
+                getCartUC,
+                addToCartUC,
+                removeItemFromCartUC,
+                updateCartItemQuantityUC
+            )
         cartViewModel = ViewModelProvider(this, cartFactory)[CartViewModel::class.java]
 
         detailViewModel.getFoodById(foodId)

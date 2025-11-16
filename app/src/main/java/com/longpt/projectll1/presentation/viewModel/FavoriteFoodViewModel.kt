@@ -6,7 +6,7 @@ import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
-import com.longpt.projectll1.domain.usecase.RemoveFromFavoriteUC
+import com.longpt.projectll1.domain.usecase.RemoveItemFromFavoriteUC
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class FavoriteFoodViewModel(
     val getFavFoodsUC: GetFavFoodsUC,
     val addFavoriteUC: AddToFavoriteUC,
-    val removeFavoriteUC: RemoveFromFavoriteUC
+    val removeFavoriteUC: RemoveItemFromFavoriteUC
 ): ViewModel() {
     private val _favoriteFoods = MutableStateFlow<TaskResult<List<Food>>>(TaskResult.Loading)
     val favoriteFoods: StateFlow<TaskResult<List<Food>>> = _favoriteFoods

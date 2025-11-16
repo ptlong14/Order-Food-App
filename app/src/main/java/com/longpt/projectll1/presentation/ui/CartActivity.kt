@@ -21,7 +21,7 @@ import com.longpt.projectll1.data.repositoryImpl.CartRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityCartBinding
 import com.longpt.projectll1.domain.usecase.AddToCartUC
 import com.longpt.projectll1.domain.usecase.GetCartUC
-import com.longpt.projectll1.domain.usecase.RemoveFromCartUC
+import com.longpt.projectll1.domain.usecase.RemoveItemFromCartUC
 import com.longpt.projectll1.domain.usecase.UpdateCartItemQuantityUC
 import com.longpt.projectll1.presentation.adapter.CartAdapter
 import com.longpt.projectll1.presentation.factory.CartViewModelFactory
@@ -46,10 +46,15 @@ class CartActivity : AppCompatActivity() {
         val cartRepo = CartRepositoryImpl(FirestoreDataSource())
         val getCartUC = GetCartUC(cartRepo)
         val addToCartUC = AddToCartUC(cartRepo)
-        val removeFromCartUC = RemoveFromCartUC(cartRepo)
+        val removeItemFromCartUC = RemoveItemFromCartUC(cartRepo)
         val updateCartItemQuantityUC = UpdateCartItemQuantityUC(cartRepo)
         val cartFactory =
-            CartViewModelFactory(getCartUC, addToCartUC, removeFromCartUC, updateCartItemQuantityUC)
+            CartViewModelFactory(
+                getCartUC,
+                addToCartUC,
+                removeItemFromCartUC,
+                updateCartItemQuantityUC
+            )
         cartViewModel = ViewModelProvider(this, cartFactory)[CartViewModel::class.java]
 
         cartViewModel.observeCart(userId)

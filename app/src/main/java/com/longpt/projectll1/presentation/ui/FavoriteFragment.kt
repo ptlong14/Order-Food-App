@@ -19,7 +19,7 @@ import com.longpt.projectll1.data.repositoryImpl.FoodRepositoryImpl
 import com.longpt.projectll1.databinding.FragmentFavoriteFoodsBinding
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
-import com.longpt.projectll1.domain.usecase.RemoveFromFavoriteUC
+import com.longpt.projectll1.domain.usecase.RemoveItemFromFavoriteUC
 import com.longpt.projectll1.presentation.adapter.FavFoodsAdapter
 import com.longpt.projectll1.presentation.factory.FavFoodsViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.FavoriteFoodViewModel
@@ -36,7 +36,7 @@ class FavoriteFragment : Fragment() {
         val repoFood = FoodRepositoryImpl(FirestoreDataSource())
         val getFavFoodsUC = GetFavFoodsUC(repoFood)
         val addToFavoriteUC = AddToFavoriteUC(repoFood)
-        val removeFavoriteUC = RemoveFromFavoriteUC(repoFood)
+        val removeFavoriteUC = RemoveItemFromFavoriteUC(repoFood)
 
         val factory = FavFoodsViewModelFactory(getFavFoodsUC, addToFavoriteUC, removeFavoriteUC)
         favViewModel = ViewModelProvider(requireActivity(), factory)[FavoriteFoodViewModel::class.java]

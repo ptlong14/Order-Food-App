@@ -8,6 +8,24 @@
     android:background="@drawable/im_yummy_bg"
     tools:context=".presentation.ui.LoginActivity">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iBtnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/bg_search_view"
+        android:clickable="true"
+        android:contentDescription="Back"
+        android:focusable="true"
+        android:visibility="gone"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:src="@drawable/im_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        app:tint="#FF5722" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +48,7 @@
             android:text="Mừng bạn trở lại!" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputEmail"
+            android:id="@+id/textOldPassword"
             style="@style/parent"
 
             android:layout_marginTop="@dimen/loginViewsMargin">
@@ -58,9 +76,22 @@
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/tvForgotPassword"
+            style="@style/parent"
+            android:paddingVertical="10dp"
+            android:text="Quên mật khẩu"
+            android:textAlignment="textEnd"
+            android:textColor="#494848"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btLogin"
-            style="@style/loginButton"
+            android:background="@drawable/button_v2"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textColor="#FFF"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/loginViewsMargin"
             android:padding="16dp"

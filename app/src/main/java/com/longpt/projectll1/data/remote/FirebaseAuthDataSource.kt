@@ -1,6 +1,7 @@
 package com.longpt.projectll1.data.remote
 
 import com.google.firebase.Firebase
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -51,6 +52,32 @@ class FirebaseAuthDataSource(
             TaskResult.Error(Exception("Email chưa đăng ký"))
         } catch (_: FirebaseAuthInvalidCredentialsException) {
             TaskResult.Error(Exception("Sai mật khẩu"))
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    suspend fun changePassword(
+        email: String,
+        oldPassword: String,
+        newPassword: String
+    ): TaskResult<Unit> {
+        return try {
+            val user =
+                auth.currentUser ?: return TaskResult.Error(Exception("Người dùng chưa đăng nhập"))
+            val credential = EmailAuthProvider.getCredential(email, oldPassword)
+            user.reauthenticate(credential).await()
+            user.updatePassword(newPassword).await()
+            TaskResult.Success(Unit)
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
+
+    suspend fun sendResetPassword(email: String): TaskResult<Unit> {
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            TaskResult.Success(Unit)
         } catch (e: Exception) {
             TaskResult.Error(e)
         }

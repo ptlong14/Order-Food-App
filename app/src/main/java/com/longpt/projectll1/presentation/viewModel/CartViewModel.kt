@@ -6,7 +6,7 @@ import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.domain.model.CartItem
 import com.longpt.projectll1.domain.usecase.AddToCartUC
 import com.longpt.projectll1.domain.usecase.GetCartUC
-import com.longpt.projectll1.domain.usecase.RemoveFromCartUC
+import com.longpt.projectll1.domain.usecase.RemoveItemFromCartUC
 import com.longpt.projectll1.domain.usecase.UpdateCartItemQuantityUC
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class CartViewModel(
     private val getCartUC: GetCartUC,
     private val addToCartUC: AddToCartUC,
-    private val removeFromCartUC: RemoveFromCartUC,
+    private val removeItemFromCartUC: RemoveItemFromCartUC,
     private val updateCartItemQuantityUC: UpdateCartItemQuantityUC
 ) : ViewModel() {
     private val _cart = MutableStateFlow<TaskResult<List<CartItem>>>(TaskResult.Loading)
@@ -48,7 +48,7 @@ class CartViewModel(
     fun removeFromCart(cartItemId: String, userId: String) {
         viewModelScope.launch {
             _removeCartState.value = TaskResult.Loading
-            val result = removeFromCartUC(cartItemId, userId)
+            val result = removeItemFromCartUC(cartItemId, userId)
             _removeCartState.value = result
         }
     }

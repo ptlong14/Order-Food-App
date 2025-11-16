@@ -15,8 +15,10 @@ import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirebaseAuthDataSource
 import com.longpt.projectll1.data.repositoryImpl.AuthRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityLoginBinding
+import com.longpt.projectll1.domain.usecase.ChangePasswordUC
 import com.longpt.projectll1.domain.usecase.LoginUC
 import com.longpt.projectll1.domain.usecase.RegisterUC
+import com.longpt.projectll1.domain.usecase.ResetPasswordUC
 import com.longpt.projectll1.presentation.factory.AuthViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.AuthViewModel
 import com.longpt.projectll1.utils.showToast
@@ -34,8 +36,10 @@ class LoginActivity : AppCompatActivity() {
         val repoAuth = AuthRepositoryImpl(FirebaseAuthDataSource())
         val loginUC = LoginUC(repoAuth)
         val registerUC = RegisterUC(repoAuth)
+        val changePasswordUC = ChangePasswordUC(repoAuth)
+        val resetPasswordUC = ResetPasswordUC(repoAuth)
         val authFactory = AuthViewModelFactory(
-            loginUC, registerUC
+            loginUC, registerUC, changePasswordUC, resetPasswordUC
         )
         authViewModel = ViewModelProvider(this, authFactory)[AuthViewModel::class.java]
 
@@ -49,32 +53,35 @@ class LoginActivity : AppCompatActivity() {
             }
 
             authViewModel.login(email, password)
-
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    authViewModel.loginResult.collect { res ->
-                        when (res) {
-                            TaskResult.Loading -> {}
-                            is TaskResult.Error -> {
-                                res.exception.message?.showToast(this@LoginActivity)
-                            }
-
-                            is TaskResult.Success -> {
-                                val user = res.data
-                                "Đăng nhập thành công. Chào mừng ${user.name}".showToast(this@LoginActivity)
-                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                                finish()
-                            }
-                        }
-                    }
-                }
-            }
+        }
+        binding.tvForgotPassword.setOnClickListener {
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
         binding.tvRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             intent.putExtra("from", "login")
             startActivity(intent)
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.loginResult.collect { res ->
+                    when (res) {
+                        TaskResult.Loading -> {}
+                        is TaskResult.Error -> {
+                            res.exception.message?.showToast(this@LoginActivity)
+                            return@collect
+                        }
+
+                        is TaskResult.Success -> {
+                            val user = res.data
+                            "Đăng nhập thành công. Chào mừng ${user.name}".showToast(this@LoginActivity)
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            finish()
+                        }
+                    }
+                }
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

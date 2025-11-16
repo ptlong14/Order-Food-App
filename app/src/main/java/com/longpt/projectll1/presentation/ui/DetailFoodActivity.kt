@@ -26,7 +26,7 @@ import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
 import com.longpt.projectll1.domain.usecase.GetFoodByIdUC
-import com.longpt.projectll1.domain.usecase.RemoveFromFavoriteUC
+import com.longpt.projectll1.domain.usecase.RemoveItemFromFavoriteUC
 import com.longpt.projectll1.presentation.factory.FavFoodsViewModelFactory
 import com.longpt.projectll1.presentation.factory.FoodDetailViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.FavoriteFoodViewModel
@@ -68,7 +68,7 @@ class DetailFoodActivity : AppCompatActivity() {
         val repo = FoodRepositoryImpl(FirestoreDataSource())
         val getFoodByIdUC = GetFoodByIdUC(repo)
         val getFavFoodsUC = GetFavFoodsUC(repo)
-        val removeFavoriteUC = RemoveFromFavoriteUC(repo)
+        val removeFavoriteUC = RemoveItemFromFavoriteUC(repo)
         val addToFavoriteUC = AddToFavoriteUC(repo)
         val detailFactory = FoodDetailViewModelFactory(getFoodByIdUC)
         val favFactory = FavFoodsViewModelFactory(getFavFoodsUC, addToFavoriteUC, removeFavoriteUC)

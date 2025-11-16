@@ -30,4 +30,16 @@ class AuthRepositoryImpl(
     ): TaskResult<Unit> {
         return authDataSource.register(email, password)
     }
+
+    override suspend fun changePassword(
+        email: String,
+        oldPassword: String,
+        newPassword: String
+    ): TaskResult<Unit> {
+        return authDataSource.changePassword(email, oldPassword, newPassword)
+    }
+
+    override suspend fun sendResetPassword(email: String): TaskResult<Unit> {
+        return authDataSource.sendResetPassword(email)
+    }
 }
