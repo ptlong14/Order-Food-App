@@ -6,9 +6,9 @@ import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.databinding.CustomToolbarBinding
+import com.longpt.projectll1.utils.AlertUtils
 import com.longpt.projectll1.utils.showToast
 
 class TopBarView @JvmOverloads constructor(
@@ -34,7 +34,12 @@ class TopBarView @JvmOverloads constructor(
                 if (context !is Activity) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
             } else {
-                BottomSheetLogin().show((context as FragmentActivity).supportFragmentManager, "LoginBTS")
+                AlertUtils.showLoginAlert(context) {
+                    val intent = Intent(context, LoginActivity::class.java)
+                    intent.putExtra("from", "client")
+                    if (context !is Activity) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
             }
         }
 

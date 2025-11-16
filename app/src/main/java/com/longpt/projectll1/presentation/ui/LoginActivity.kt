@@ -2,6 +2,7 @@ package com.longpt.projectll1.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -27,12 +28,14 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
     private lateinit var authViewModel: AuthViewModel
     lateinit var binding: ActivityLoginBinding
+    lateinit var from: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        from = intent.getStringExtra("from").toString()
         val repoAuth = AuthRepositoryImpl(FirebaseAuthDataSource())
         val loginUC = LoginUC(repoAuth)
         val registerUC = RegisterUC(repoAuth)
@@ -42,6 +45,15 @@ class LoginActivity : AppCompatActivity() {
             loginUC, registerUC, changePasswordUC, resetPasswordUC
         )
         authViewModel = ViewModelProvider(this, authFactory)[AuthViewModel::class.java]
+
+        if (from == "client") {
+            binding.iBtnBack.visibility = View.VISIBLE
+            binding.iBtnBack.setOnClickListener {
+                finish()
+            }
+        } else {
+            binding.iBtnBack.visibility = View.GONE
+        }
 
         binding.btLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
@@ -60,7 +72,6 @@ class LoginActivity : AppCompatActivity() {
 
         binding.tvRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
-            intent.putExtra("from", "login")
             startActivity(intent)
         }
         lifecycleScope.launch {

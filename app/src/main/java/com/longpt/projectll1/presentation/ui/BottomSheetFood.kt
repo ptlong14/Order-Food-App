@@ -28,6 +28,7 @@ import com.longpt.projectll1.presentation.factory.CartViewModelFactory
 import com.longpt.projectll1.presentation.factory.FoodDetailViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.CartViewModel
 import com.longpt.projectll1.presentation.viewModel.FoodDetailViewModel
+import com.longpt.projectll1.utils.AlertUtils
 import com.longpt.projectll1.utils.FormatUtil
 import com.longpt.projectll1.utils.GenerateUtil
 import com.longpt.projectll1.utils.showToast
@@ -172,8 +173,11 @@ class BottomSheetFood : BottomSheetDialogFragment() {
         }
         binding.btnAddToCart.setOnClickListener {
             if (currentUser == null) {
-                val bts = BottomSheetLogin()
-                bts.show(childFragmentManager, "LoginBTS")
+                AlertUtils.showLoginAlert(requireContext()) {
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    intent.putExtra("from", "client")
+                    startActivity(intent)
+                }
             } else {
                 val userId = currentUser!!.uid
                 if (detailViewModel.canAddToCart.value == true) {
@@ -199,8 +203,11 @@ class BottomSheetFood : BottomSheetDialogFragment() {
 
         binding.btnBuyNow.setOnClickListener {
             if (currentUser == null) {
-                val bts = BottomSheetLogin()
-                bts.show(childFragmentManager, "LoginBTS")
+                AlertUtils.showLoginAlert(requireContext()) {
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    intent.putExtra("from", "client")
+                    startActivity(intent)
+                }
             } else {
                 if (detailViewModel.canAddToCart.value == true) {
                     val optionList = detailViewModel.getSelectedOptionDescriptions()

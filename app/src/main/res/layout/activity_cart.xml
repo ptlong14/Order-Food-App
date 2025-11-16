@@ -82,14 +82,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="#353434"
                     android:textStyle="bold"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:layout_gravity="center"
                     android:text="Giỏ hàng trống rồi."/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#5F5F5F"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:layout_gravity="center"
                     android:text="Lướt Yummy, lựa hàng ngay đi!"/>
                 <androidx.appcompat.widget.AppCompatButton

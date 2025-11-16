@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.databinding.FragmentAccountBinding
+import com.longpt.projectll1.utils.AlertUtils
 import com.longpt.projectll1.utils.showToast
 
 
@@ -51,8 +52,11 @@ class UserFragment : Fragment() {
         }
         binding.btnAccountProfile.setOnClickListener {
             if (currentUser == null) {
-                val bts= BottomSheetLogin()
-                bts.show(childFragmentManager, "LoginBTS")
+                AlertUtils.showLoginAlert(requireContext()) {
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    intent.putExtra("from", "client")
+                    startActivity(intent)
+                }
                 return@setOnClickListener
             }
             val intent = Intent(requireContext(), UserInformationActivity::class.java)

@@ -1,6 +1,7 @@
 package com.longpt.projectll1.presentation.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -31,6 +32,7 @@ import com.longpt.projectll1.presentation.factory.FavFoodsViewModelFactory
 import com.longpt.projectll1.presentation.factory.FoodDetailViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.FavoriteFoodViewModel
 import com.longpt.projectll1.presentation.viewModel.FoodDetailViewModel
+import com.longpt.projectll1.utils.AlertUtils
 import com.longpt.projectll1.utils.FormatUtil
 import com.longpt.projectll1.utils.ShareScreenshot
 import com.longpt.projectll1.utils.showToast
@@ -151,7 +153,11 @@ class DetailFoodActivity : AppCompatActivity() {
     private fun setupActions() {
         binding.iBtnFavorite.setOnClickListener {
             if(currentUser==null){
-                "Vui lòng đăng nhập để sử dụng chức năng này".showToast(this)
+                AlertUtils.showLoginAlert(this) {
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.putExtra("from", "client")
+                    startActivity(intent)
+                }
                 return@setOnClickListener
             }
             val userId = currentUser!!.uid

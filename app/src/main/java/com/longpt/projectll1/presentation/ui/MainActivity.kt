@@ -1,5 +1,6 @@
 package com.longpt.projectll1.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,8 +10,7 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.R
 import com.longpt.projectll1.databinding.ActivityMainBinding
-import com.longpt.projectll1.presentation.ui.UserFragment
-import com.longpt.projectll1.utils.showToast
+import com.longpt.projectll1.utils.AlertUtils
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -41,7 +41,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.botFavorite->{
                     if (currentUser == null) {
-                        "Vui lòng đăng nhập để sử dụng chức năng này".showToast(this)
+                        AlertUtils.showLoginAlert(this) {
+                            val intent = Intent(this, LoginActivity::class.java)
+                            intent.putExtra("from", "client")
+                            startActivity(intent)
+                        }
                         return@setOnItemSelectedListener false
                     }
                     loadFragment(FavoriteFragment())
@@ -49,7 +53,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.botMyOrder->{
                     if (currentUser == null) {
-                        "Vui lòng đăng nhập để sử dụng chức năng này".showToast(this)
+                        AlertUtils.showLoginAlert(this) {
+                            val intent = Intent(this, LoginActivity::class.java)
+                            intent.putExtra("from", "client")
+                            startActivity(intent)
+                        }
                         return@setOnItemSelectedListener false
                     }
                     loadFragment(OrderHistoryContainerFragment())
