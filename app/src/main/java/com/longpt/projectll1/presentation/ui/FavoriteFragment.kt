@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
+import com.longpt.projectll1.data.repositoryImpl.FavoriteRepositoryImpl
 import com.longpt.projectll1.data.repositoryImpl.FoodRepositoryImpl
 import com.longpt.projectll1.databinding.FragmentFavoriteFoodsBinding
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
@@ -34,9 +35,10 @@ class FavoriteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val repoFood = FoodRepositoryImpl(FirestoreDataSource())
-        val getFavFoodsUC = GetFavFoodsUC(repoFood)
-        val addToFavoriteUC = AddToFavoriteUC(repoFood)
-        val removeFavoriteUC = RemoveItemFromFavoriteUC(repoFood)
+        val repoFavorite = FavoriteRepositoryImpl(FirestoreDataSource())
+        val getFavFoodsUC = GetFavFoodsUC(repoFavorite)
+        val addToFavoriteUC = AddToFavoriteUC(repoFavorite)
+        val removeFavoriteUC = RemoveItemFromFavoriteUC(repoFavorite)
 
         val factory = FavFoodsViewModelFactory(getFavFoodsUC, addToFavoriteUC, removeFavoriteUC)
         favViewModel = ViewModelProvider(requireActivity(), factory)[FavoriteFoodViewModel::class.java]

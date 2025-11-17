@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,7 @@ import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.OrderRepositoryImpl
 import com.longpt.projectll1.databinding.FragmentOrderHistoryItemBinding
+import com.longpt.projectll1.domain.model.Order
 import com.longpt.projectll1.domain.usecase.CancelledOrderUC
 import com.longpt.projectll1.domain.usecase.CreateOrderUC
 import com.longpt.projectll1.domain.usecase.GetUserOrderDetailUC
@@ -31,6 +33,7 @@ class OrderHistoryItemFragment : Fragment() {
     private var type: String? = null
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var ordersByStatusAdapter: OrdersByStatusAdapter
+    private var currentOrders: List<Order> = emptyList()
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val userId = currentUser!!.uid
 
@@ -75,7 +78,7 @@ class OrderHistoryItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ordersByStatusAdapter =
-            OrdersByStatusAdapter(type!!, emptyList(), onClickBtn = { orderId, typeBtn ->
+            OrdersByStatusAdapter(type!!, emptyList(), onClickActionBtn = { orderId, typeBtn ->
                 when (typeBtn) {
                     "Rating" -> {
                         val fragment = BottomSheetRatingOrder.newInstance(orderId)
@@ -86,6 +89,17 @@ class OrderHistoryItemFragment : Fragment() {
                         val intent = Intent(requireContext(), CancelOrderActivity::class.java)
                         intent.putExtra("orderId", orderId)
                         startActivity(intent)
+                    }
+                    "Reason" -> {
+                        val reason = currentOrders
+                            .find { it.orderId == orderId }
+                            ?.cancelReason
+
+                        AlertDialog.Builder(requireContext())
+                            .setTitle("Lý do hủy")
+                            .setMessage(reason ?: "Không có lý do")
+                            .setPositiveButton("OK", null)
+                            .show()
                     }
 
                     "Reorder" -> {
@@ -134,7 +148,8 @@ class OrderHistoryItemFragment : Fragment() {
 
                         is TaskResult.Success -> {
                             binding.swipeRefreshOrders.isRefreshing = false
-                            ordersByStatusAdapter.updateData(res.data)
+                            currentOrders = res.data
+                            ordersByStatusAdapter.updateData(currentOrders)
                             if (res.data.isEmpty()) {
                                 binding.rvOrderItem.visibility = View.GONE
                                 binding.layoutEmptyOrder.visibility = View.VISIBLE

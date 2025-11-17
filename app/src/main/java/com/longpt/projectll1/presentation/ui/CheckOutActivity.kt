@@ -206,6 +206,7 @@ class CheckOutActivity : AppCompatActivity() {
                     shippingFee,
                     orderNote,
                     orderStatus= "Pending",
+                    "",
                     createdAt,
                     updatedAt
                 )

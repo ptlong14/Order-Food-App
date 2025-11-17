@@ -10,11 +10,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
-import com.longpt.projectll1.data.repositoryImpl.FoodRepositoryImpl
+import com.longpt.projectll1.data.repositoryImpl.RatingRepositoryImpl
 import com.longpt.projectll1.data.sharedPref.UserStorage
 import com.longpt.projectll1.databinding.BottomSheetAddupRatingBinding
 import com.longpt.projectll1.domain.model.Rating
-import com.longpt.projectll1.domain.usecase.AddRatingUC
+import com.longpt.projectll1.domain.usecase.AddUpRatingUC
+import com.longpt.projectll1.domain.usecase.GetRatingByUserIdUC
 import com.longpt.projectll1.domain.usecase.GetRatingListByFoodIdUC
 import com.longpt.projectll1.presentation.factory.RatingViewModelFactory
 import com.longpt.projectll1.presentation.viewModel.RatingOrderViewModel
@@ -25,6 +26,7 @@ class BottomSheetRatingOrder : BottomSheetDialogFragment() {
     lateinit var binding: BottomSheetAddupRatingBinding
     lateinit var ratingViewModel: RatingOrderViewModel
     lateinit var foodId: String
+    lateinit var userRating: Rating
 
     companion object {
         private const val ARG_FOOD_ID = "foodId"
@@ -40,14 +42,14 @@ class BottomSheetRatingOrder : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val repoRating = FoodRepositoryImpl(FirestoreDataSource())
-        val addRatingUC = AddRatingUC(repoRating)
+        val repoRating = RatingRepositoryImpl(FirestoreDataSource())
+        val addUpRatingUC = AddUpRatingUC(repoRating)
         val getRatingListByFoodIdUC = GetRatingListByFoodIdUC(repoRating)
+        val getRatingByUserIdUC = GetRatingByUserIdUC(repoRating)
         val ratingFactory = RatingViewModelFactory(
-            addRatingUC, getRatingListByFoodIdUC
+            addUpRatingUC, getRatingListByFoodIdUC, getRatingByUserIdUC
         )
         ratingViewModel = ViewModelProvider(this, ratingFactory)[RatingOrderViewModel::class.java]
-
     }
 
     override fun onCreateView(
@@ -60,7 +62,27 @@ class BottomSheetRatingOrder : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.ratingBar.rating = 5f
+        val foodId = arguments?.getString(ARG_FOOD_ID) ?: ""
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+        ratingViewModel.getRatingByUserId(userId, foodId)
+        lifecycleScope.launch {
+            ratingViewModel.rating.collect { res ->
+                when (res) {
+                    is TaskResult.Loading -> {}
+                    is TaskResult.Error -> {
+                        binding.ratingBar.rating = 5f
+                        binding.edtComment.setText("")
+                    }
+
+                    is TaskResult.Success -> {
+                        userRating = res.data
+                        binding.ratingBar.rating = userRating.rating.toFloat()
+                        binding.edtComment.setText(userRating.comment)
+                    }
+                }
+            }
+        }
         binding.btnClose.setOnClickListener {
             dismiss()
         }
@@ -68,15 +90,13 @@ class BottomSheetRatingOrder : BottomSheetDialogFragment() {
         binding.btnSubmit.setOnClickListener {
             val ratingStar = binding.ratingBar.rating.toDouble()
             val comment = binding.edtComment.text.toString()
-            val foodId = arguments?.getString(ARG_FOOD_ID) ?: ""
-            val userId = FirebaseAuth.getInstance().currentUser!!.uid
             val username = UserStorage.getUserName(requireContext())
             val avatarUser = UserStorage.getAvatar(requireContext())
             val rating = Rating(userId, username, avatarUser, ratingStar, comment)
-            ratingViewModel.addRating(rating, foodId, userId)
+            ratingViewModel.addUpRating(rating, foodId, userId)
         }
         lifecycleScope.launch {
-            ratingViewModel.addRatingResult.collect { res ->
+            ratingViewModel.addUpRatingResult.collect { res ->
                 when (res) {
                     is TaskResult.Loading -> {}
                     is TaskResult.Error -> res.exception.message?.showToast(requireContext())

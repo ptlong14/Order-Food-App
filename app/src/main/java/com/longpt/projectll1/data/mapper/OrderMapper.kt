@@ -29,6 +29,7 @@ object OrderMapper {
             shippingFee = dto.shippingFee,
             orderNote = dto.orderNote,
             orderStatus = dto.orderStatus,
+            cancelReason = dto.cancelReason,
             createdAt = dto.createdAt,
             updatedAt = dto.updatedAt
         )
@@ -56,6 +57,7 @@ object OrderMapper {
             shippingFee = domain.shippingFee,
             orderNote = domain.orderNote,
             orderStatus = domain.orderStatus,
+            cancelReason = domain.cancelReason,
             createdAt = domain.createdAt,
             updatedAt = domain.updatedAt
         )

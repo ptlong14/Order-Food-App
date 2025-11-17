@@ -538,8 +538,8 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
-    //tạo đánh giá cho món ăn
-    suspend fun createRating(rating: RatingDto, foodId: String, userId: String): TaskResult<Unit> {
+    //tạo/cập nhật đánh giá cho món ăn
+    suspend fun addUpRating(rating: RatingDto, foodId: String, userId: String): TaskResult<Unit> {
         if (userId.isEmpty()) {
             return TaskResult.Error(Exception("UserId không hợp lệ"))
         }
@@ -547,22 +547,29 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
             return TaskResult.Error(Exception("Món ăn không tồn tại"))
         }
         return try {
-            val ratingRef = firestore.collection("foods").document(foodId).collection("ratings")
-                .document(userId)
-            ratingRef.set(rating).await()
+            val foodRef = firestore.collection("foods").document(foodId)
+            val ratingRef = foodRef.collection("ratings").document(userId)
 
-            val ratingsSnapshot = firestore.collection("foods")
-                .document(foodId)
-                .collection("ratings")
-                .get()
-                .await()
+            firestore.runTransaction { transaction ->
+                val foodSnapshot = transaction.get(foodRef)
+                val ratingSnapshot = transaction.get(ratingRef)
+                val oldRating = ratingSnapshot.getDouble("rating") ?: 0.0
+                val ratingSum = foodSnapshot.getDouble("ratingSum") ?: 0.0
+                val ratingCount = foodSnapshot.getLong("ratingCount") ?: 0L
 
-            val ratings = ratingsSnapshot.documents.map { it.getDouble("rating") ?: 0.0 }
-            val newAverage = if (ratings.isNotEmpty()) ratings.average() else 0.0
-            firestore.collection("foods")
-                .document(foodId)
-                .update("rating", newAverage)
-                .await()
+                transaction.set(ratingRef, rating)
+                val newSum = ratingSum - oldRating + rating.rating
+                val newCount = if (oldRating == 0.0) ratingCount + 1 else ratingCount
+
+                transaction.update(
+                    foodRef, mapOf(
+                        "rating" to (newSum / newCount),
+                        "ratingSum" to newSum,
+                        "ratingCount" to newCount
+                    )
+                )
+            }.await()
+
             TaskResult.Success(Unit)
         } catch (e: Exception) {
             TaskResult.Error(e)
@@ -583,6 +590,21 @@ class FirestoreDataSource(private val firestore: FirebaseFirestore = FirebaseFir
         }
     }
 
+    //lấy đánh giá của user theo foodId
+    suspend fun getRatingByUserId(userId: String, foodId: String): TaskResult<RatingDto> {
+        return try {
+            val snapshot = firestore.collection("foods").document(foodId).collection("ratings")
+                .document(userId).get().await()
+            val data = snapshot.toObject(RatingDto::class.java)
+            if (data != null)
+                TaskResult.Success(data)
+            else
+                TaskResult.Error(Exception("Không tìm thấy đánh giá"))
+
+        } catch (e: Exception) {
+            TaskResult.Error(e)
+        }
+    }
     //lấy thông tin user
     fun getUserInfo(userId: String): Flow<TaskResult<UserDto>> = callbackFlow {
         if (userId.isEmpty()) {

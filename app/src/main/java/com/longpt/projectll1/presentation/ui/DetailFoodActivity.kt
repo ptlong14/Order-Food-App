@@ -22,13 +22,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
+import com.longpt.projectll1.data.repositoryImpl.FavoriteRepositoryImpl
 import com.longpt.projectll1.data.repositoryImpl.FoodRepositoryImpl
+import com.longpt.projectll1.data.repositoryImpl.RatingRepositoryImpl
 import com.longpt.projectll1.databinding.ActivityDetailFoodBinding
 import com.longpt.projectll1.domain.model.Food
-import com.longpt.projectll1.domain.usecase.AddRatingUC
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
+import com.longpt.projectll1.domain.usecase.AddUpRatingUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
 import com.longpt.projectll1.domain.usecase.GetFoodByIdUC
+import com.longpt.projectll1.domain.usecase.GetRatingByUserIdUC
 import com.longpt.projectll1.domain.usecase.GetRatingListByFoodIdUC
 import com.longpt.projectll1.domain.usecase.RemoveItemFromFavoriteUC
 import com.longpt.projectll1.presentation.adapter.RatingAdapter
@@ -79,20 +82,23 @@ class DetailFoodActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvComments.adapter = adapterRating
 
-        val repo = FoodRepositoryImpl(FirestoreDataSource())
-        val getFoodByIdUC = GetFoodByIdUC(repo)
-        val getFavFoodsUC = GetFavFoodsUC(repo)
-        val removeFavoriteUC = RemoveItemFromFavoriteUC(repo)
-        val addToFavoriteUC = AddToFavoriteUC(repo)
+        val foodRepo = FoodRepositoryImpl(FirestoreDataSource())
+        val favRepo = FavoriteRepositoryImpl(FirestoreDataSource())
+        val repoRating = RatingRepositoryImpl(FirestoreDataSource())
 
-        val repoRating = FoodRepositoryImpl(FirestoreDataSource())
-        val addRatingUC = AddRatingUC(repoRating)
+        val getFoodByIdUC = GetFoodByIdUC(foodRepo)
+        val getFavFoodsUC = GetFavFoodsUC(favRepo)
+        val removeFavoriteUC = RemoveItemFromFavoriteUC(favRepo)
+        val addToFavoriteUC = AddToFavoriteUC(favRepo)
+
+        val addUpRatingUC = AddUpRatingUC(repoRating)
         val getRatingListByFoodIdUC = GetRatingListByFoodIdUC(repoRating)
+        val getRatingByUserIdUC = GetRatingByUserIdUC(repoRating)
 
         val detailFactory = FoodDetailViewModelFactory(getFoodByIdUC)
         val favFactory = FavFoodsViewModelFactory(getFavFoodsUC, addToFavoriteUC, removeFavoriteUC)
         val ratingFactory = RatingViewModelFactory(
-            addRatingUC, getRatingListByFoodIdUC
+            addUpRatingUC, getRatingListByFoodIdUC, getRatingByUserIdUC
         )
 
         ratingViewModel = ViewModelProvider(this, ratingFactory)[RatingOrderViewModel::class.java]

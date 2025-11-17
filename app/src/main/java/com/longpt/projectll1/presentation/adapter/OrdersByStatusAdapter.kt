@@ -15,7 +15,7 @@ class OrdersByStatusAdapter(
     val type: String,
     var orders: List<Order>,
     var onClickOrderDetailBtn: (String) -> Unit,
-    var onClickBtn: (String, String) -> Unit
+    var onClickActionBtn: (String, String) -> Unit
 ) : RecyclerView.Adapter<OrdersByStatusAdapter.OrdersByStatusItemViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -69,9 +69,14 @@ class OrdersByStatusAdapter(
 
         when (type) {
             "Pending" -> {
-                holder.binding.btn1.text = "Hủy đơn"
-                holder.binding.btn1.setOnClickListener { onClickBtn(order.orderId, "Cancelled") }
-                holder.binding.btn2.visibility = View.GONE
+                holder.binding.btn2.text = "Hủy đơn"
+                holder.binding.btn2.setOnClickListener {
+                    onClickActionBtn(
+                        order.orderId,
+                        "Cancelled"
+                    )
+                }
+                holder.binding.btn1.visibility = View.GONE
             }
 
             "Delivering" -> {
@@ -84,22 +89,21 @@ class OrdersByStatusAdapter(
                     holder.binding.btn1.visibility = View.VISIBLE
                     holder.binding.btn1.text = "Đánh giá"
                     holder.binding.btn1.setOnClickListener {
-                        onClickBtn(order.orderList[0].foodId, "Rating")
+                        onClickActionBtn(order.orderList[0].foodId, "Rating")
                     }
 
                     holder.binding.btn2.visibility = View.VISIBLE
                     holder.binding.btn2.text = "Mua lại"
                     holder.binding.btn2.setOnClickListener {
-                        onClickBtn(order.orderId, "Reorder")
+                        onClickActionBtn(order.orderId, "Reorder")
                     }
 
                 } else {
                     holder.binding.btn1.visibility = View.GONE
-
                     holder.binding.btn2.visibility = View.VISIBLE
                     holder.binding.btn2.text = "Mua lại"
                     holder.binding.btn2.setOnClickListener {
-                        onClickBtn(order.orderId, "Reorder")
+                        onClickActionBtn(order.orderId, "Reorder")
                     }
                 }
             }
@@ -108,13 +112,13 @@ class OrdersByStatusAdapter(
                 holder.binding.btn1.visibility = View.VISIBLE
                 holder.binding.btn1.text = "Lý do hủy"
                 holder.binding.btn1.setOnClickListener {
-                    onClickBtn(order.orderId, "Reason")
+                    onClickActionBtn(order.orderId, "Reason")
                 }
 
                 holder.binding.btn2.visibility = View.VISIBLE
                 holder.binding.btn2.text = "Mua lại"
                 holder.binding.btn2.setOnClickListener {
-                    onClickBtn(order.orderId, "Reorder")
+                    onClickActionBtn(order.orderId, "Reorder")
                 }
             }
         }

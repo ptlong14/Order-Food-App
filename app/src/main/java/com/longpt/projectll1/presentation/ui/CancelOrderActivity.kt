@@ -1,7 +1,6 @@
 package com.longpt.projectll1.presentation.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -60,29 +59,23 @@ class CancelOrderActivity : AppCompatActivity() {
         binding.iBtnBack.setOnClickListener {
             finish()
         }
-        var reason = ""
-        binding.radioGroupReasons.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.rbReason1 -> reason = binding.rbReason1.text.toString()
-                R.id.rbReason2 -> reason = binding.rbReason2.text.toString()
-                R.id.rbReason3 -> reason = binding.rbReason3.text.toString()
-                R.id.rbReasonOther -> {
-                    binding.edtOtherReason.visibility = View.VISIBLE
-                    reason = if (binding.edtOtherReason.text != null) {
-                        binding.edtOtherReason.text.toString()
-                    } else {
-                        "Other"
-                    }
-                }
-            }
-        }
-
 
         binding.btnSubmitCancel.setOnClickListener {
+            val selectedReason = when (binding.radioGroupReasons.checkedRadioButtonId) {
+                R.id.rbReason1 -> binding.rbReason1.text.toString()
+                R.id.rbReason2 -> binding.rbReason2.text.toString()
+                R.id.rbReason3 -> binding.rbReason3.text.toString()
+                R.id.rbReasonOther -> {
+                    val otherText = binding.edtOtherReason.text.toString().trim()
+                    otherText.ifEmpty { "Other" }
+                }
+
+                else -> ""
+            }
             AlertDialog.Builder(this).setTitle("Xác nhận hủy đơn hàng")
                 .setMessage("Bạn có chắc chắn muốn hủy đơn hàng này không?")
                 .setPositiveButton("Hủy đơn") { _, _ ->
-                    orderViewModel.cancelOrder(orderId!!, userId, reason)
+                    orderViewModel.cancelOrder(orderId!!, userId, selectedReason)
                     finish()
                 }.setNegativeButton("Quay lại") { _, _ ->
                     null

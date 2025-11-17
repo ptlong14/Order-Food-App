@@ -14,6 +14,7 @@ data class Order(
     val shippingFee: Double = 0.0,
     val orderNote: String = "",
     var orderStatus: String = "Pending",
+    val cancelReason: String = "",
     val createdAt: Timestamp = Timestamp.now(),
     val updatedAt: Timestamp = Timestamp.now()
 ) : Parcelable

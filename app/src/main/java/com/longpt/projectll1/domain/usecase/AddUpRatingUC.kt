@@ -1,9 +1,9 @@
 package com.longpt.projectll1.domain.usecase
 
 import com.longpt.projectll1.domain.model.Rating
-import com.longpt.projectll1.domain.repository.FoodRepository
+import com.longpt.projectll1.domain.repository.RatingRepository
 
-class AddRatingUC(val repository: FoodRepository) {
+class AddUpRatingUC(val repository: RatingRepository) {
     suspend operator fun invoke(rating: Rating, foodId: String, userId: String) =
-        repository.addRating(rating, foodId, userId)
+        repository.addUpRating(rating, foodId, userId)
 }
