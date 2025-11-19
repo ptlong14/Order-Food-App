@@ -126,15 +126,16 @@
                 app:layout_constraintStart_toStartOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/cardView">
 
-                <TextView
+                <RatingBar
                     android:id="@+id/tvStarRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="⭐⭐⭐⭐⭐"
-                    android:textColor="#FFD700"
-                    android:textSize="16sp" />
-
+                    android:numStars="5"
+                    android:stepSize="0.5"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:progressTint="#FFD700"
+                    android:secondaryProgressTint="#FFD700"
+                    android:progressBackgroundTint="#DDDDDD" />
                 <TextView
                     android:id="@+id/tvCntSold"
                     android:layout_width="wrap_content"
@@ -143,20 +144,6 @@
                     android:text="Đã bán: 20"
                     android:textColor="#666666"
                     android:textSize="14sp" />
-                <View
-                    android:layout_width="1dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_height="14dp"
-                    android:background="#999999" />
-                <TextView
-                    android:id="@+id/tvCntLike"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2 lượt thích"
-                    android:textColor="#666666"
-                    android:textSize="14sp" />
-
-
             </LinearLayout>
 
             <!-- Mô tả -->
@@ -198,14 +185,12 @@
 
                 <ImageButton
                     android:id="@+id/iBtnAddToCart"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/im_add"
-                    android:backgroundTint="#FF5722"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_add_v1"
+                    android:background="@drawable/border_img_btn_add"
                     android:foreground="?attr/selectableItemBackground"
-                    android:textColor="#FF9800"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    app:tint="#F47D55" />
             </LinearLayout>
 
             <!-- Divider -->

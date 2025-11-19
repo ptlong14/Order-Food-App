@@ -135,6 +135,7 @@ class DetailFoodActivity : AppCompatActivity() {
                         food = foodResult.data
 
                         binding.tvFoodName.text = food.name
+                        binding.tvStarRating.rating = food.rating.toFloat()
                         binding.tvPrice.text = FormatUtil.moneyFormat(food.price)
                         Glide.with(binding.imgFood.context).load(food.imgUrl).into(binding.imgFood)
                         binding.tvCntSold.text = "Đã bán: ${food.sold}"
