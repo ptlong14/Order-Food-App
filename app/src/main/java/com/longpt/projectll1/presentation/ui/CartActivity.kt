@@ -80,6 +80,8 @@ class CartActivity : AppCompatActivity() {
                         cartViewModel.removeFromCart(cartItemId, userId)
                     }.setNegativeButton("Hủy", null).show()
             }
+        }, onSetQuantity = { cartItemId, newQuantity ->
+            cartViewModel.setQuantity(cartItemId, newQuantity, userId)
         })
         binding.recyclerViewCart.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -98,7 +100,7 @@ class CartActivity : AppCompatActivity() {
                         if (result.data.isEmpty()) {
                             binding.recyclerViewCart.visibility = View.GONE
                             binding.layoutEmptyCart.visibility = View.VISIBLE
-                            binding.layoutCheckout.visibility= View.GONE
+                            binding.layoutCheckout.visibility = View.GONE
                             binding.btnGoHome.setOnClickListener {
                                 val intent = Intent(this@CartActivity, MainActivity::class.java)
                                 startActivity(intent)
@@ -106,8 +108,9 @@ class CartActivity : AppCompatActivity() {
                         } else {
                             binding.recyclerViewCart.visibility = View.VISIBLE
                             binding.layoutEmptyCart.visibility = View.GONE
-                            binding.layoutCheckout.visibility= View.VISIBLE
-                            val totalPrice = result.data.sumOf { it.cartItemQuantity * it.unitPrice }
+                            binding.layoutCheckout.visibility = View.VISIBLE
+                            val totalPrice =
+                                result.data.sumOf { it.cartItemQuantity * it.unitPrice }
                             binding.tvTotalPrice.text = FormatUtil.moneyFormat(totalPrice)
                         }
                     }

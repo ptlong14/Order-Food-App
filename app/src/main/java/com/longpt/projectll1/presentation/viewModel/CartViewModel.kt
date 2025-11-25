@@ -53,6 +53,9 @@ class CartViewModel(
         }
     }
 
+    fun setQuantity(cartItemId: String, newQuantity: Int, userId: String) {
+        updateQuantityCartItem(cartItemId, newQuantity, userId)
+    }
     fun increaseQuantity(cartItemId: String, userId: String) {
         updateQuantityCartItem(cartItemId, getCartItemQuantity(cartItemId) + 1, userId)
     }

@@ -58,6 +58,10 @@ class FoodDetailViewModel(
         }
     }
 
+    fun setQuantity(qty: Int) {
+        _quantity.value = qty.coerceAtLeast(1)
+    }
+
     fun increaseQuantity() {
         _quantity.value = _quantity.value + 1
     }

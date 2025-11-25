@@ -2,6 +2,8 @@ package com.longpt.projectll1.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -130,7 +132,7 @@ class BottomSheetFood : BottomSheetDialogFragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             detailViewModel.quantity.collect { quantity ->
-                binding.tvQuantity.text = quantity.toString()
+                binding.tvQuantity.setText(quantity.toString())
                 updateQuantityButtons(quantity)
             }
         }
@@ -153,6 +155,19 @@ class BottomSheetFood : BottomSheetDialogFragment() {
                 }
             }
         }
+        binding.tvQuantity.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val qty = s.toString().toIntOrNull() ?: 1
+                val clampedQty = qty.coerceIn(1, 99)
+                if (clampedQty.toString() != s.toString()) {
+                    binding.tvQuantity.setText(clampedQty.toString())
+                    binding.tvQuantity.setSelection(binding.tvQuantity.text.length)
+                }
+                detailViewModel.setQuantity(qty)
+            }
+        })
         viewLifecycleOwner.lifecycleScope.launch {
             detailViewModel.totalPrice.collect { price ->
                 binding.tvPrice.text = FormatUtil.moneyFormat(price)
