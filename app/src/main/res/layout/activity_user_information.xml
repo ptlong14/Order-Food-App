@@ -164,6 +164,17 @@
                     android:text="Email"
                     app:drawableTint="#A09F9F" />
 
+                <TextView
+                    android:id="@+id/etAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:padding="10dp"
+                    android:text="Địa chỉ"
+                    app:drawableEndCompat="@drawable/ic_next"
+                    app:drawableTint="#A09F9F" />
+
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

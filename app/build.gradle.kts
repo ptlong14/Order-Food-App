@@ -83,6 +83,6 @@ dependencies {
     implementation(files("libs/merchant-1.0.25.aar"))
 
     implementation("org.typesense:typesense-java:1.3.0")
-
+    implementation("com.github.chthai64:SwipeRevealLayout:1.4.0")
     implementation("com.cloudinary:cloudinary-android:3.0.2")
 }

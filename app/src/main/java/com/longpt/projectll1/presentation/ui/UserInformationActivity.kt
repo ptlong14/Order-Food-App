@@ -136,6 +136,9 @@ class UserInformationActivity : AppCompatActivity() {
             startActivity(Intent(this, ChangePasswordActivity::class.java))
         }
 
+        binding.etAddress.setOnClickListener {
+            startActivity(Intent(this, AddressActivity::class.java))
+        }
         binding.iBtnBack.setOnClickListener {
             finish()
         }

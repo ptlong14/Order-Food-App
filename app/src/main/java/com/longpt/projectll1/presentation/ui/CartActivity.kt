@@ -74,14 +74,12 @@ class CartActivity : AppCompatActivity() {
             if (currentQuantity > 1) {
                 cartViewModel.decreaseQuantity(cartItemId, userId)
             } else {
-                AlertDialog.Builder(this).setTitle("Xóa món khỏi giỏ hàng")
-                    .setMessage("Bạn có chắc muốn xóa món này khỏi giỏ hàng không?")
-                    .setPositiveButton("Xóa") { _, _ ->
-                        cartViewModel.removeFromCart(cartItemId, userId)
-                    }.setNegativeButton("Hủy", null).show()
+                showDeleteConfirmationDialog(cartItemId)
             }
         }, onSetQuantity = { cartItemId, newQuantity ->
             cartViewModel.setQuantity(cartItemId, newQuantity, userId)
+        }, onSwipeCartItem = { cartItemId ->
+            showDeleteConfirmationDialog(cartItemId)
         })
         binding.recyclerViewCart.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -174,6 +172,14 @@ class CartActivity : AppCompatActivity() {
                 "Giỏ hàng trống".showToast(this@CartActivity)
             }
         }
+    }
+
+    fun showDeleteConfirmationDialog(cartItemId: String) {
+        AlertDialog.Builder(this).setTitle("Xóa món khỏi giỏ hàng")
+            .setMessage("Bạn có chắc muốn xóa món này khỏi giỏ hàng không?")
+            .setPositiveButton("Xóa") { _, _ ->
+                cartViewModel.removeFromCart(cartItemId, userId)
+            }.setNegativeButton("Hủy", null).show()
     }
 }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.longpt.projectll1.databinding.ItemRvCartBinding
 import com.longpt.projectll1.domain.model.CartItem
 import com.longpt.projectll1.utils.FormatUtil
@@ -15,9 +16,15 @@ class CartAdapter(
     var carts: List<CartItem>,
     val onClickIncrease: (cartItemId: String) -> Unit,
     val onClickDecrease: (cartItemId: String, currentQuantity: Int) -> Unit,
-    val onSetQuantity: (cartItemId: String, newQuantity: Int) -> Unit
+    val onSetQuantity: (cartItemId: String, newQuantity: Int) -> Unit,
+    val onSwipeCartItem: (cartItemId: String) -> Unit
 ) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+    private val viewBinderHelper: ViewBinderHelper = ViewBinderHelper().apply {
+        setOpenOnlyOne(true)
+    }
+
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -63,6 +70,11 @@ class CartAdapter(
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
+        viewBinderHelper.bind(holder.binding.swipeLayout, cart.cartItemId)
+        holder.binding.layoutDelete.setOnClickListener {
+            onSwipeCartItem(cart.cartItemId)
+        }
     }
 
     override fun getItemCount(): Int {
