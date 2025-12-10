@@ -159,7 +159,7 @@ class DetailFoodActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            favViewModel.addFavoriteState.collect { result ->
+            favViewModel.addFavoriteEvent.collect { result ->
                 when (result) {
                     is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã thêm vào yêu thích").showToast(this@DetailFoodActivity)
@@ -171,7 +171,7 @@ class DetailFoodActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            favViewModel.removeFavoriteState.collect { result ->
+            favViewModel.removeFavoriteEvent.collect { result ->
                 when (result) {
                     is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã xóa khỏi yêu thích").showToast(this@DetailFoodActivity)

@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.longpt.projectll1.AdminAddFoodTest
 import com.longpt.projectll1.data.sharedPref.UserStorage
 import com.longpt.projectll1.databinding.FragmentAccountBinding
 import com.longpt.projectll1.utils.AlertUtils
-import com.longpt.projectll1.utils.showToast
 
 
 class UserFragment : Fragment() {
@@ -50,7 +50,8 @@ class UserFragment : Fragment() {
             }
         }
         binding.btnChat.setOnClickListener {
-            "Tính năng này đang được phát triển".showToast(requireContext())
+//            "Tính năng này đang được phát triển".showToast(requireContext())
+            startActivity(Intent(requireContext(), AdminAddFoodTest::class.java))
         }
         binding.btnAccountProfile.setOnClickListener {
             if (currentUser == null) {

@@ -16,8 +16,8 @@ import com.longpt.projectll1.R
 import com.longpt.projectll1.core.TaskResult
 import com.longpt.projectll1.data.remote.FirestoreDataSource
 import com.longpt.projectll1.data.repositoryImpl.FavoriteRepositoryImpl
-import com.longpt.projectll1.data.repositoryImpl.FoodRepositoryImpl
 import com.longpt.projectll1.databinding.FragmentFavoriteFoodsBinding
+import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
 import com.longpt.projectll1.domain.usecase.RemoveItemFromFavoriteUC
@@ -30,11 +30,11 @@ import kotlinx.coroutines.launch
 class FavoriteFragment : Fragment() {
     lateinit var binding: FragmentFavoriteFoodsBinding
     lateinit var favViewModel: FavoriteFoodViewModel
+    private var currentFavFoods: List<Food> = emptyList()
     private val currentUser get() = FirebaseAuth.getInstance().currentUser
     private val userId = currentUser!!.uid
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val repoFood = FoodRepositoryImpl(FirestoreDataSource())
         val repoFavorite = FavoriteRepositoryImpl(FirestoreDataSource())
         val getFavFoodsUC = GetFavFoodsUC(repoFavorite)
         val addToFavoriteUC = AddToFavoriteUC(repoFavorite)
@@ -91,7 +91,15 @@ class FavoriteFragment : Fragment() {
                     }
                     is TaskResult.Success -> {
                         binding.swipeRefreshFavorites.isRefreshing = false
-                        favFoodsAdapter.updateData(result.data)
+                        currentFavFoods = result.data
+                        favFoodsAdapter.updateData(currentFavFoods)
+                        if (result.data.isEmpty()) {
+                            binding.recyclerViewFavorites.visibility = View.GONE
+                            binding.layoutEmptyFav.visibility = View.VISIBLE
+                        } else {
+                            binding.recyclerViewFavorites.visibility = View.VISIBLE
+                            binding.layoutEmptyFav.visibility = View.GONE
+                        }
                     }
                     is TaskResult.Error -> {
                         binding.swipeRefreshFavorites.isRefreshing = false
@@ -102,7 +110,7 @@ class FavoriteFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            favViewModel.addFavoriteState.collect { result ->
+            favViewModel.addFavoriteEvent.collect { result ->
                 when (result) {
                     is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã thêm vào yêu thích").showToast(requireContext())
@@ -112,7 +120,7 @@ class FavoriteFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            favViewModel.removeFavoriteState.collect { result ->
+            favViewModel.removeFavoriteEvent.collect { result ->
                 when (result) {
                     is TaskResult.Loading -> {}
                     is TaskResult.Success -> ("Đã xóa khỏi yêu thích").showToast(requireContext())

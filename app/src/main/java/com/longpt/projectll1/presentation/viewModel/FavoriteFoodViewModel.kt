@@ -7,6 +7,7 @@ import com.longpt.projectll1.domain.model.Food
 import com.longpt.projectll1.domain.usecase.AddToFavoriteUC
 import com.longpt.projectll1.domain.usecase.GetFavFoodsUC
 import com.longpt.projectll1.domain.usecase.RemoveItemFromFavoriteUC
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -20,11 +21,11 @@ class FavoriteFoodViewModel(
     private val _favoriteFoods = MutableStateFlow<TaskResult<List<Food>>>(TaskResult.Loading)
     val favoriteFoods: StateFlow<TaskResult<List<Food>>> = _favoriteFoods
 
-    private val _addFavoriteState = MutableStateFlow<TaskResult<Unit>>(TaskResult.Loading)
-    val addFavoriteState: StateFlow<TaskResult<Unit>> = _addFavoriteState
+    private val _addFavoriteEvent = MutableSharedFlow<TaskResult<Unit>>()
+    val addFavoriteEvent = _addFavoriteEvent
 
-    private val _removeFavoriteState = MutableStateFlow<TaskResult<Unit>>(TaskResult.Loading)
-    val removeFavoriteState: StateFlow<TaskResult<Unit>> = _removeFavoriteState
+    private val _removeFavoriteEvent = MutableSharedFlow<TaskResult<Unit>>()
+    val removeFavoriteEvent = _removeFavoriteEvent
     fun observeFavFoods(userId:String) {
         viewModelScope.launch {
             getFavFoodsUC(userId).collectLatest { result ->
@@ -40,17 +41,17 @@ class FavoriteFoodViewModel(
 
     fun addFavorite(food: Food, userId: String) {
         viewModelScope.launch {
-            _addFavoriteState.value= TaskResult.Loading
+            _addFavoriteEvent.emit(TaskResult.Loading)
             val result = addFavoriteUC(food, userId)
-            _addFavoriteState.value = result
+            _addFavoriteEvent.emit(result)
         }
     }
 
     fun removeFavorite(foodId: String, userId: String) {
         viewModelScope.launch {
-            _removeFavoriteState.value= TaskResult.Loading
+            _removeFavoriteEvent.emit(TaskResult.Loading)
             val result = removeFavoriteUC(foodId, userId)
-            _removeFavoriteState.value = result
+            _removeFavoriteEvent.emit(result)
         }
     }
 }
